@@ -12,23 +12,227 @@
 
 <style>
 
-body{font-family:-apple-system,sans-serif;background:#f4f6f8;margin:0;color:#222}
+*{
 
-header{background:#0b6efd;color:white;padding:22px 18px}
+  box-sizing:border-box;
 
-main{max-width:720px;margin:auto;padding:14px}
+}
 
-.card{background:white;border-radius:16px;padding:18px;margin:12px 0;box-shadow:0 2px 10px #0001}
+body{
 
-button{padding:13px 16px;border:0;border-radius:10px;margin:4px;font-weight:700;font-size:16px}
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;
 
-.primary{background:#0b6efd;color:white}
+  background:#f4f6f8;
 
-.status{padding:12px;background:#eef2ff;border-radius:10px;margin-bottom:10px}
+  margin:0;
 
-.hint{font-size:13px;color:#64748b;line-height:1.5}
+  color:#222;
 
-.privacy{font-size:13px;color:#334155;background:#f8fafc;border-radius:10px;padding:12px;line-height:1.5}
+}
+
+header{
+
+  background:#0b6efd;
+
+  color:white;
+
+  padding:28px 18px;
+
+}
+
+header h1{
+
+  margin:0 0 8px;
+
+  font-size:30px;
+
+}
+
+header p{
+
+  margin:0;
+
+  font-size:17px;
+
+}
+
+main{
+
+  max-width:760px;
+
+  margin:auto;
+
+  padding:14px;
+
+}
+
+.card{
+
+  background:white;
+
+  border-radius:16px;
+
+  padding:18px;
+
+  margin:12px 0;
+
+  box-shadow:0 2px 10px #0001;
+
+}
+
+h2{
+
+  margin-top:0;
+
+}
+
+label{
+
+  display:block;
+
+  font-weight:700;
+
+  margin:12px 0 6px;
+
+}
+
+input,
+
+textarea{
+
+  width:100%;
+
+  padding:12px;
+
+  border:1px solid #ccc;
+
+  border-radius:10px;
+
+  font:inherit;
+
+  background:white;
+
+}
+
+textarea{
+
+  min-height:180px;
+
+  resize:vertical;
+
+}
+
+button{
+
+  padding:13px 16px;
+
+  border:0;
+
+  border-radius:10px;
+
+  margin:4px;
+
+  font-weight:700;
+
+  font-size:16px;
+
+}
+
+.primary{
+
+  background:#0b6efd;
+
+  color:white;
+
+}
+
+.secondary{
+
+  background:#e9eef7;
+
+  color:#1f2937;
+
+}
+
+button:disabled{
+
+  opacity:.45;
+
+}
+
+.status{
+
+  padding:12px;
+
+  background:#eef2ff;
+
+  border-radius:10px;
+
+  margin-bottom:10px;
+
+}
+
+.hint{
+
+  font-size:13px;
+
+  color:#64748b;
+
+  line-height:1.5;
+
+}
+
+.privacy{
+
+  font-size:13px;
+
+  color:#334155;
+
+  background:#f8fafc;
+
+  border-radius:10px;
+
+  padding:12px;
+
+  line-height:1.5;
+
+}
+
+.summary{
+
+  white-space:pre-wrap;
+
+  background:#f8fafc;
+
+  border-radius:10px;
+
+  padding:14px;
+
+  line-height:1.7;
+
+  min-height:120px;
+
+}
+
+.row{
+
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:10px;
+
+}
+
+@media(max-width:600px){
+
+  .row{
+
+    grid-template-columns:1fr;
+
+  }
+
+}
 
 </style>
 
@@ -40,7 +244,7 @@ button{padding:13px 16px;border:0;border-radius:10px;margin:4px;font-weight:700;
 
 <h1>リハビリ会議アシスト</h1>
 
-<p>🎙️ 録音テスト版</p>
+<p>🎙️ 録音・会議整理テスト版</p>
 
 </header>
 
@@ -50,17 +254,103 @@ button{padding:13px 16px;border:0;border-radius:10px;margin:4px;font-weight:700;
 
 <h2>🎙️ マイク録音</h2>
 
-<div id="status" class="status">準備OK</div>
+<div id="status" class="status">
 
-<button id="start" class="primary">録音開始</button>
+準備OK
 
-<button id="stop" disabled>録音停止</button>
+</div>
 
-<audio id="audio" controls hidden style="width:100%;margin-top:12px"></audio>
+<button id="start" class="primary">
 
-<p class="hint">SafariでHTTPSのページとして開いた場合、録音開始時にマイク許可が表示されます。「許可」を選んでください。</p>
+録音開始
 
-<p class="privacy">🔒 このテスト版は、録音した音声をこのページ内で再生するだけで、外部サーバーへアップロードする処理は入れていません。</p>
+</button>
+
+<button id="stop" disabled>
+
+録音停止
+
+</button>
+
+<audio
+
+  id="audio"
+
+  controls
+
+  hidden
+
+  style="width:100%;margin-top:12px">
+
+</audio>
+
+<p class="hint">
+
+SafariでHTTPSのページとして開き、録音開始時にマイクの使用を「許可」してください。
+
+</p>
+
+<p class="privacy">
+
+🔒 録音データはこのページ内で再生するだけです。
+
+外部サーバーへアップロードする処理は入れていません。
+
+</p>
+
+</section>
+
+<section class="card">
+
+<h2>👤 会議情報</h2>
+
+<div class="row">
+
+<div>
+
+<label for="name">
+
+利用者
+
+</label>
+
+<input
+
+  id="name"
+
+  placeholder="例：Aさん">
+
+</div>
+
+<div>
+
+<label for="date">
+
+会議日
+
+</label>
+
+<input
+
+  id="date"
+
+  type="date">
+
+</div>
+
+</div>
+
+<label for="staff">
+
+参加者
+
+</label>
+
+<input
+
+  id="staff"
+
+  placeholder="例：PT、OT、看護師、介護職、ケアマネ">
 
 </section>
 
@@ -68,7 +358,51 @@ button{padding:13px 16px;border:0;border-radius:10px;margin:4px;font-weight:700;
 
 <h2>📝 会議内容</h2>
 
-<textarea id="text" rows="10" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:10px;font:inherit" placeholder="ここに会議内容を入力できます"></textarea>
+<textarea
+
+  id="text"
+
+  placeholder="会議内容・文字起こし結果をここに入力します"></textarea>
+
+<p class="hint">
+
+※現在は「整理」のテスト版です。
+
+入力内容を外部AIへ送信せず、このブラウザ内だけで整理します。
+
+</p>
+
+<button id="summarize" class="primary">
+
+会議内容を整理する
+
+</button>
+
+<button id="clear" class="secondary">
+
+クリア
+
+</button>
+
+</section>
+
+<section class="card">
+
+<h2>📋 リハビリ会議録（案）</h2>
+
+<div id="summary" class="summary">
+
+ここに整理結果が表示されます。
+
+</div>
+
+<button id="copy" class="secondary">
+
+結果をコピー
+
+</button>
+
+<span id="copied" class="hint"></span>
 
 </section>
 
@@ -76,99 +410,565 @@ button{padding:13px 16px;border:0;border-radius:10px;margin:4px;font-weight:700;
 
 <script>
 
-let recorder=null,stream=null,chunks=[],recordedUrl=null;
+let recorder=null;
+
+let stream=null;
+
+let chunks=[];
+
+let recordedUrl=null;
 
 const $=id=>document.getElementById(id);
 
 function getSupportedMimeType(){
 
-const types=["audio/mp4","audio/mp4;codecs=mp4a.40.2","audio/webm;codecs=opus","audio/webm"];
+  const types=[
 
-return types.find(type=>typeof MediaRecorder.isTypeSupported==="function"&&MediaRecorder.isTypeSupported(type))||"";
+    "audio/mp4",
+
+    "audio/mp4;codecs=mp4a.40.2",
+
+    "audio/webm;codecs=opus",
+
+    "audio/webm"
+
+  ];
+
+  return types.find(
+
+    type =>
+
+      typeof MediaRecorder.isTypeSupported==="function"
+
+      &&
+
+      MediaRecorder.isTypeSupported(type)
+
+  ) || "";
 
 }
 
 $("start").onclick=async()=>{
 
-try{
+  try{
 
-if(!navigator.mediaDevices?.getUserMedia)throw new Error("HTTPSで公開されたページではありません");
+    if(!navigator.mediaDevices?.getUserMedia){
 
-if(!window.MediaRecorder)throw new Error("このブラウザは録音機能に対応していません");
+      throw new Error(
 
-stream=await navigator.mediaDevices.getUserMedia({audio:true});
+        "HTTPSで公開されたページではありません"
 
-chunks=[];
+      );
 
-const mimeType=getSupportedMimeType();
+    }
 
-recorder=mimeType?new MediaRecorder(stream,{mimeType}):new MediaRecorder(stream);
+    if(!window.MediaRecorder){
 
-recorder.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
+      throw new Error(
 
-recorder.onerror=e=>{$("status").textContent="録音中にエラーが発生しました。";console.error(e)};
+        "このブラウザは録音機能に対応していません"
 
-recorder.onstop=()=>{
+      );
 
-const type=recorder.mimeType||mimeType||"audio/mp4";
+    }
 
-const blob=new Blob(chunks,{type});
+    stream=
 
-if(recordedUrl)URL.revokeObjectURL(recordedUrl);
+      await navigator.mediaDevices.getUserMedia({
 
-recordedUrl=URL.createObjectURL(blob);
+        audio:true
 
-const audio=$("audio");
+      });
 
-audio.pause();
+    chunks=[];
 
-audio.src=recordedUrl;
+    const mimeType=
 
-audio.hidden=false;
+      getSupportedMimeType();
 
-audio.load();
+    recorder=
 
-stream?.getTracks().forEach(t=>t.stop());
+      mimeType
 
-stream=null;
+      ? new MediaRecorder(
 
-$("status").textContent="録音完了。下の再生ボタンで音声を確認してください。";
+          stream,
+
+          {mimeType}
+
+        )
+
+      : new MediaRecorder(stream);
+
+    recorder.ondataavailable=e=>{
+
+      if(e.data && e.data.size){
+
+        chunks.push(e.data);
+
+      }
+
+    };
+
+    recorder.onerror=()=>{
+
+      $("status").textContent=
+
+        "録音中にエラーが発生しました。";
+
+    };
+
+    recorder.onstop=()=>{
+
+      const type=
+
+        recorder.mimeType
+
+        || mimeType
+
+        || "audio/mp4";
+
+      const blob=
+
+        new Blob(
+
+          chunks,
+
+          {type}
+
+        );
+
+      if(recordedUrl){
+
+        URL.revokeObjectURL(recordedUrl);
+
+      }
+
+      recordedUrl=
+
+        URL.createObjectURL(blob);
+
+      const audio=
+
+        $("audio");
+
+      audio.pause();
+
+      audio.src=recordedUrl;
+
+      audio.hidden=false;
+
+      audio.load();
+
+      stream?.getTracks().forEach(
+
+        t=>t.stop()
+
+      );
+
+      stream=null;
+
+      $("status").textContent=
+
+        "録音完了。下の再生ボタンで音声を確認してください。";
+
+    };
+
+    recorder.start();
+
+    $("start").disabled=true;
+
+    $("stop").disabled=false;
+
+    $("status").textContent=
+
+      "🔴 録音中です…";
+
+  }
+
+  catch(e){
+
+    stream?.getTracks().forEach(
+
+      t=>t.stop()
+
+    );
+
+    stream=null;
+
+    $("status").textContent=
+
+      "マイクを開始できませんでした："
+
+      + e.message;
+
+    alert(
+
+      "SafariでHTTPSのページを開き、マイクの使用を許可してください。"
+
+    );
+
+  }
 
 };
 
-recorder.start();
-
-$("start").disabled=true;
-
-$("stop").disabled=false;
-
-$("status").textContent="🔴 録音中です…";
-
-}catch(e){
-
-stream?.getTracks().forEach(t=>t.stop());
-
-stream=null;
-
-$("status").textContent="マイクを開始できませんでした："+e.message;
-
-alert("SafariでHTTPSのページを開き、マイクの使用を許可してください。");
-
-}};
-
 $("stop").onclick=()=>{
 
-if(recorder?.state==="recording"){
+  if(recorder?.state==="recording"){
 
-$("status").textContent="録音を停止しています…";
+    $("status").textContent=
 
-recorder.stop();
+      "録音を停止しています…";
 
-$("start").disabled=false;
+    recorder.stop();
 
-$("stop").disabled=true;
+    $("start").disabled=false;
 
-}};
+    $("stop").disabled=true;
+
+  }
+
+};
+
+function findLines(text,words){
+
+  return text
+
+    .split(/\n+/)
+
+    .map(x=>x.trim())
+
+    .filter(Boolean)
+
+    .filter(
+
+      line =>
+
+        words.some(
+
+          w=>line.includes(w)
+
+        )
+
+    )
+
+    .slice(0,5)
+
+    .join("\n");
+
+}
+
+$("summarize").onclick=()=>{
+
+  const text=
+
+    $("text").value.trim();
+
+  if(!text){
+
+    alert(
+
+      "先に会議内容を入力してください。"
+
+    );
+
+    return;
+
+  }
+
+  const current=
+
+    findLines(
+
+      text,
+
+      [
+
+        "歩行",
+
+        "歩け",
+
+        "立ち上が",
+
+        "食事",
+
+        "入浴",
+
+        "着替",
+
+        "トイレ",
+
+        "認知",
+
+        "血圧",
+
+        "状態",
+
+        "ADL"
+
+      ]
+
+    );
+
+  const wish=
+
+    findLines(
+
+      text,
+
+      [
+
+        "希望",
+
+        "したい",
+
+        "行きたい",
+
+        "目標",
+
+        "本人",
+
+        "家族"
+
+      ]
+
+    );
+
+  const pros=
+
+    findLines(
+
+      text,
+
+      [
+
+        "PT",
+
+        "OT",
+
+        "ST",
+
+        "看護",
+
+        "介護",
+
+        "ケアマネ",
+
+        "リハビリ"
+
+      ]
+
+    );
+
+  const issues=
+
+    findLines(
+
+      text,
+
+      [
+
+        "課題",
+
+        "不安",
+
+        "ふらつ",
+
+        "困",
+
+        "低下",
+
+        "リスク",
+
+        "問題",
+
+        "難しい"
+
+      ]
+
+    );
+
+  const plan=
+
+    findLines(
+
+      text,
+
+      [
+
+        "方針",
+
+        "継続",
+
+        "訓練",
+
+        "支援",
+
+        "今後",
+
+        "次回",
+
+        "目標"
+
+      ]
+
+    );
+
+  const freq=
+
+    findLines(
+
+      text,
+
+      [
+
+        "週",
+
+        "月",
+
+        "毎日",
+
+        "外出"
+
+      ]
+
+    );
+
+  const transport=
+
+    findLines(
+
+      text,
+
+      [
+
+        "車",
+
+        "自動車",
+
+        "バス",
+
+        "タクシー",
+
+        "徒歩",
+
+        "送迎",
+
+        "家族"
+
+      ]
+
+    );
+
+  $("summary").textContent=
+
+`【リハビリテーション会議録（案）】
+
+利用者：${$("name").value||"—"}
+
+会議日：${$("date").value||"—"}
+
+参加者：${$("staff").value||"—"}
+
+【1. 現在の生活・身体状況】
+
+${current||"要確認"}
+
+【2. 本人・家族の希望】
+
+${wish||"要確認"}
+
+【3. 専門職からの意見】
+
+${pros||"要確認"}
+
+【4. 生活上の課題・リスク】
+
+${issues||"要確認"}
+
+【5. 目標・今後の方針】
+
+${plan||"要確認"}
+
+【6. 外出・地域生活】
+
+外出頻度：${freq||"要確認"}
+
+外出手段：${transport||"要確認"}
+
+【7. 次回までの確認事項】
+
+・本人の希望に対する進捗
+
+・身体機能・ADLの変化
+
+・必要なサービスや環境調整
+
+※これは会議内容をキーワードで整理した「案」です。
+
+正式記録にする前に原文と照合・確認してください。`;
+
+};
+
+$("clear").onclick=()=>{
+
+  $("text").value="";
+
+  $("summary").textContent=
+
+    "ここに整理結果が表示されます。";
+
+};
+
+$("copy").onclick=async()=>{
+
+  const text=
+
+    $("summary").textContent;
+
+  if(
+
+    !text
+
+    ||
+
+    text==="ここに整理結果が表示されます。"
+
+  ){
+
+    return;
+
+  }
+
+  try{
+
+    await navigator.clipboard.writeText(text);
+
+    $("copied").textContent=
+
+      " コピーしました";
+
+    setTimeout(
+
+      ()=>$("copied").textContent="",
+
+      1800
+
+    );
+
+  }
+
+  catch(e){
+
+    alert(
+
+      "コピーできませんでした。"
+
+    );
+
+  }
+
+};
 
 </script>
 
