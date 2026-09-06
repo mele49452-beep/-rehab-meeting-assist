@@ -470,9 +470,7 @@ function getSupportedMimeType(){
 
     if(
 
-      typeof MediaRecorder.isTypeSupported==="function"
-
-      &&
+      typeof MediaRecorder.isTypeSupported==="function" &&
 
       MediaRecorder.isTypeSupported(types[i])
 
@@ -532,25 +530,23 @@ $("start").onclick=async function(){
 
       getSupportedMimeType();
 
-    if(mimeType){
+    recorder=
 
-      recorder=
+      mimeType
 
-        new MediaRecorder(
+      ?
 
-          stream,
+      new MediaRecorder(
 
-          {mimeType:mimeType}
+        stream,
 
-        );
+        {mimeType:mimeType}
 
-    }else{
+      )
 
-      recorder=
+      :
 
-        new MediaRecorder(stream);
-
-    }
+      new MediaRecorder(stream);
 
     recorder.ondataavailable=function(e){
 
@@ -592,11 +588,7 @@ $("start").onclick=async function(){
 
       if(recordedUrl){
 
-        URL.revokeObjectURL(
-
-          recordedUrl
-
-        );
+        URL.revokeObjectURL(recordedUrl);
 
       }
 
@@ -604,9 +596,7 @@ $("start").onclick=async function(){
 
         URL.createObjectURL(blob);
 
-      const audio=
-
-        $("audio");
+      const audio=$("audio");
 
       audio.pause();
 
@@ -752,9 +742,7 @@ function unique(lines){
 
 function findLines(text,words){
 
-  const source=
-
-    getLines(text);
+  const source=getLines(text);
 
   const result=[];
 
@@ -1064,8 +1052,6 @@ $("summarize").onclick=function(){
 
     );
 
-  /* 重複を整理 */
-
   const excluded=
 
     wishes.concat(
@@ -1137,6 +1123,14 @@ $("summarize").onclick=function(){
       ]
 
     );
+
+  /*
+
+    希望・専門職意見・目標は
+
+    外出欄から除外
+
+  */
 
   const outing=
 
@@ -1268,113 +1262,65 @@ $("summarize").onclick=function(){
 
       transportLines[i];
 
-    if(
+    if(line.indexOf("家族の車")!==-1){
 
-      line.indexOf("家族の車")!==-1
-
-    ){
-
-      transportText=
-
-        "家族の車";
+      transportText="家族の車";
 
       break;
 
     }
 
-    if(
+    if(line.indexOf("送迎")!==-1){
 
-      line.indexOf("送迎")!==-1
-
-    ){
-
-      transportText=
-
-        "送迎";
+      transportText="送迎";
 
       break;
 
     }
 
-    if(
+    if(line.indexOf("タクシー")!==-1){
 
-      line.indexOf("タクシー")!==-1
-
-    ){
-
-      transportText=
-
-        "タクシー";
+      transportText="タクシー";
 
       break;
 
     }
 
-    if(
+    if(line.indexOf("バス")!==-1){
 
-      line.indexOf("バス")!==-1
-
-    ){
-
-      transportText=
-
-        "バス";
+      transportText="バス";
 
       break;
 
     }
 
-    if(
+    if(line.indexOf("電車")!==-1){
 
-      line.indexOf("電車")!==-1
-
-    ){
-
-      transportText=
-
-        "電車";
+      transportText="電車";
 
       break;
 
     }
 
-    if(
+    if(line.indexOf("徒歩")!==-1){
 
-      line.indexOf("徒歩")!==-1
-
-    ){
-
-      transportText=
-
-        "徒歩";
+      transportText="徒歩";
 
       break;
 
     }
 
-    if(
+    if(line.indexOf("自動車")!==-1){
 
-      line.indexOf("自動車")!==-1
-
-    ){
-
-      transportText=
-
-        "自動車";
+      transportText="自動車";
 
       break;
 
     }
 
-    if(
+    if(line.indexOf("車")!==-1){
 
-      line.indexOf("車")!==-1
-
-    ){
-
-      transportText=
-
-        "車";
+      transportText="車";
 
       break;
 
@@ -1428,7 +1374,7 @@ $("summarize").onclick=function(){
 
   /* =========================
 
-     会議録を表示
+     会議録
 
   ========================= */
 
@@ -1464,11 +1410,21 @@ ${showLines(plans)}
 
 【6. 外出・地域生活】
 
-${showLines(outing)}
-
 外出頻度：${frequencyText}
 
 外出手段：${transportText}
+
+${showLines(
+
+  removeLines(
+
+    outing,
+
+    frequencyLines.concat(transportLines)
+
+  )
+
+)}
 
 【7. 次回までの確認事項】
 
