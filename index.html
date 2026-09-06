@@ -440,895 +440,1031 @@ let chunks=[];
 
 let recordedUrl=null;
 
-const $=id=>document.getElementById(id);
+const $=function(id){
+
+  return document.getElementById(id);
+
+};
+
+/* =========================
+
+   録音
+
+========================= */
 
 function getSupportedMimeType(){
 
-const types=[
+  const types=[
 
-"audio/mp4",
+    "audio/mp4",
 
-"audio/mp4;codecs=mp4a.40.2",
+    "audio/mp4;codecs=mp4a.40.2",
 
-"audio/webm;codecs=opus",
+    "audio/webm;codecs=opus",
 
-"audio/webm"
+    "audio/webm"
 
-];
+  ];
 
-return types.find(
+  for(let i=0;i<types.length;i++){
 
-type=>
+    if(
 
-typeof MediaRecorder.isTypeSupported==="function"
+      typeof MediaRecorder.isTypeSupported==="function"
 
-&&
+      &&
 
-MediaRecorder.isTypeSupported(type)
+      MediaRecorder.isTypeSupported(types[i])
 
-)||"";
+    ){
 
-}
+      return types[i];
 
-$("start").onclick=async()=>{
+    }
 
-try{
+  }
 
-if(!navigator.mediaDevices?.getUserMedia){
-
-throw new Error(
-
-"HTTPSで公開されたページではありません"
-
-);
+  return "";
 
 }
 
-if(!window.MediaRecorder){
+$("start").onclick=async function(){
 
-throw new Error(
+  try{
 
-"このブラウザは録音機能に対応していません"
+    if(
 
-);
+      !navigator.mediaDevices ||
 
-}
+      !navigator.mediaDevices.getUserMedia
 
-stream=
+    ){
 
-await navigator.mediaDevices.getUserMedia({
+      throw new Error(
 
-audio:true
+        "HTTPSで公開されたページではありません"
 
-});
+      );
 
-chunks=[];
+    }
 
-const mimeType=
+    if(!window.MediaRecorder){
 
-getSupportedMimeType();
+      throw new Error(
 
-recorder=
+        "このブラウザは録音機能に対応していません"
 
-mimeType
+      );
 
-?
+    }
 
-new MediaRecorder(
+    stream=
 
-stream,
+      await navigator.mediaDevices.getUserMedia({
 
-{mimeType}
+        audio:true
 
-)
+      });
 
-:
+    chunks=[];
 
-new MediaRecorder(stream);
+    const mimeType=
 
-recorder.ondataavailable=e=>{
+      getSupportedMimeType();
 
-if(e.data&&e.data.size){
+    if(mimeType){
 
-chunks.push(e.data);
+      recorder=
 
-}
+        new MediaRecorder(
+
+          stream,
+
+          {mimeType:mimeType}
+
+        );
+
+    }else{
+
+      recorder=
+
+        new MediaRecorder(stream);
+
+    }
+
+    recorder.ondataavailable=function(e){
+
+      if(e.data && e.data.size){
+
+        chunks.push(e.data);
+
+      }
+
+    };
+
+    recorder.onerror=function(){
+
+      $("status").textContent=
+
+        "録音中にエラーが発生しました。";
+
+    };
+
+    recorder.onstop=function(){
+
+      const type=
+
+        recorder.mimeType ||
+
+        mimeType ||
+
+        "audio/mp4";
+
+      const blob=
+
+        new Blob(
+
+          chunks,
+
+          {type:type}
+
+        );
+
+      if(recordedUrl){
+
+        URL.revokeObjectURL(
+
+          recordedUrl
+
+        );
+
+      }
+
+      recordedUrl=
+
+        URL.createObjectURL(blob);
+
+      const audio=
+
+        $("audio");
+
+      audio.pause();
+
+      audio.src=recordedUrl;
+
+      audio.hidden=false;
+
+      audio.load();
+
+      if(stream){
+
+        stream
+
+          .getTracks()
+
+          .forEach(function(track){
+
+            track.stop();
+
+          });
+
+      }
+
+      stream=null;
+
+      $("status").textContent=
+
+        "録音完了。下の再生ボタンで音声を確認してください。";
+
+    };
+
+    recorder.start();
+
+    $("start").disabled=true;
+
+    $("stop").disabled=false;
+
+    $("status").textContent=
+
+      "🔴 録音中です…";
+
+  }
+
+  catch(e){
+
+    if(stream){
+
+      stream
+
+        .getTracks()
+
+        .forEach(function(track){
+
+          track.stop();
+
+        });
+
+    }
+
+    stream=null;
+
+    $("status").textContent=
+
+      "マイクを開始できませんでした："+e.message;
+
+    alert(
+
+      "SafariでHTTPSのページを開き、マイクの使用を許可してください。"
+
+    );
+
+  }
 
 };
 
-recorder.onerror=()=>{
+$("stop").onclick=function(){
 
-$("status").textContent=
+  if(
 
-"録音中にエラーが発生しました。";
+    recorder &&
 
-};
+    recorder.state==="recording"
 
-recorder.onstop=()=>{
+  ){
 
-const type=
+    $("status").textContent=
 
-recorder.mimeType
+      "録音を停止しています…";
 
-||
+    recorder.stop();
 
-mimeType
+    $("start").disabled=false;
 
-||
+    $("stop").disabled=true;
 
-"audio/mp4";
-
-const blob=
-
-new Blob(
-
-chunks,
-
-{type}
-
-);
-
-if(recordedUrl){
-
-URL.revokeObjectURL(
-
-recordedUrl
-
-);
-
-}
-
-recordedUrl=
-
-URL.createObjectURL(
-
-blob
-
-);
-
-const audio=
-
-$("audio");
-
-audio.pause();
-
-audio.src=recordedUrl;
-
-audio.hidden=false;
-
-audio.load();
-
-stream?.getTracks().forEach(
-
-t=>t.stop()
-
-);
-
-stream=null;
-
-$("status").textContent=
-
-"録音完了。下の再生ボタンで音声を確認してください。";
+  }
 
 };
 
-recorder.start();
+/* =========================
 
-$("start").disabled=true;
+   会議内容整理
 
-$("stop").disabled=false;
+========================= */
 
-$("status").textContent=
+function getLines(text){
 
-"🔴 録音中です…";
+  return text
 
-}
+    .split(/\n+/)
 
-catch(e){
+    .map(function(line){
 
-stream?.getTracks().forEach(
+      return line.trim();
 
-t=>t.stop()
+    })
 
-);
+    .filter(function(line){
 
-stream=null;
+      return line.length>0;
 
-$("status").textContent=
-
-"マイクを開始できませんでした："
-
-+
-
-e.message;
-
-alert(
-
-"SafariでHTTPSのページを開き、マイクの使用を許可してください。"
-
-);
+    });
 
 }
 
-};
+function unique(lines){
 
-$("stop").onclick=()=>{
+  const result=[];
 
-if(
+  for(let i=0;i<lines.length;i++){
 
-recorder?.state==="recording"
+    if(result.indexOf(lines[i])===-1){
 
-){
+      result.push(lines[i]);
 
-$("status").textContent=
+    }
 
-"録音を停止しています…";
+  }
 
-recorder.stop();
-
-$("start").disabled=false;
-
-$("stop").disabled=true;
+  return result;
 
 }
 
-};
+function findLines(text,words){
 
-function lines(text){
+  const source=
 
-return text
+    getLines(text);
 
-.split(/\n+/)
+  const result=[];
 
-.map(x=>x.trim())
+  for(let i=0;i<source.length;i++){
 
-.filter(Boolean);
+    for(let j=0;j<words.length;j++){
 
-}
+      if(
 
-function unique(arr){
+        source[i].indexOf(words[j])!==-1
 
-return [
+      ){
 
-...new Set(arr)
+        result.push(source[i]);
 
-];
+        break;
 
-}
+      }
 
-function pick(text,words){
+    }
 
-return unique(
+  }
 
-lines(text).filter(
-
-line=>
-
-words.some(
-
-w=>line.includes(w)
-
-)
-
-)
-
-);
+  return unique(result);
 
 }
 
-function pickRoles(text){
+function removeLines(lines,exclude){
 
-const roles=[
+  const result=[];
 
-"PT",
+  for(let i=0;i<lines.length;i++){
 
-"OT",
+    if(
 
-"ST",
+      exclude.indexOf(lines[i])===-1
 
-"理学療法",
+    ){
 
-"作業療法",
+      result.push(lines[i]);
 
-"言語聴覚",
+    }
 
-"看護師",
+  }
 
-"看護",
-
-"介護職",
-
-"介護",
-
-"ケアマネ",
-
-"ケアマネジャー",
-
-"医師",
-
-"歯科",
-
-"薬剤師",
-
-"リハビリ"
-
-];
-
-return unique(
-
-lines(text).filter(
-
-line=>
-
-roles.some(
-
-w=>line.includes(w)
-
-)
-
-);
+  return result;
 
 }
 
-function without(arr,excluded){
+function showLines(lines){
 
-return arr.filter(
+  if(!lines.length){
 
-line=>!excluded.has(line)
+    return "要確認";
 
-);
+  }
 
-}
-
-function show(arr){
-
-return arr.length
-
-?
-
-arr.join("\n")
-
-:
-
-"要確認";
+  return lines.join("\n");
 
 }
 
-$("summarize").onclick=()=>{
+/* =========================
 
-const text=
+   整理ボタン
 
-$("text").value.trim();
+========================= */
 
-if(!text){
+$("summarize").onclick=function(){
 
-alert(
+  const text=
 
-"先に会議内容を入力してください。"
+    $("text").value.trim();
 
-);
+  if(!text){
 
-return;
+    alert(
 
-}
+      "先に会議内容を入力してください。"
 
-const wishes=
+    );
 
-pick(
+    return;
 
-text,
+  }
 
-[
+  /* 本人・家族の希望 */
 
-"本人は",
+  const wishes=
 
-"本人が",
+    findLines(
 
-"本人の希望",
+      text,
 
-"本人の意向",
+      [
 
-"希望",
+        "本人は",
 
-"したい",
+        "本人が",
 
-"行きたい",
+        "本人の希望",
 
-"やりたい",
+        "本人の意向",
 
-"家族は",
+        "希望",
 
-"家族が",
+        "したい",
 
-"家族の希望",
+        "行きたい",
 
-"家族も",
+        "やりたい",
 
-"家族として"
+        "家族は",
 
-]
+        "家族が",
 
-);
+        "家族の希望",
 
-const professional=
+        "家族も",
 
-pickRoles(text);
+        "家族として"
 
-const currentRaw=
+      ]
 
-pick(
+    );
 
-text,
+  /* 専門職 */
 
-[
+  const professional=
 
-"現在",
+    findLines(
 
-"状態",
+      text,
 
-"歩行",
+      [
 
-"歩け",
+        "PT",
 
-"杖",
+        "OT",
 
-"歩行器",
+        "ST",
 
-"車椅子",
+        "理学療法",
 
-"立ち上が",
+        "作業療法",
 
-"座位",
+        "言語聴覚",
 
-"寝返り",
+        "看護師",
 
-"食事",
+        "看護",
 
-"入浴",
+        "介護職",
 
-"着替",
+        "介護",
 
-"トイレ",
+        "ケアマネ",
 
-"排泄",
+        "ケアマネジャー",
 
-"更衣",
+        "医師",
 
-"移乗",
+        "歯科",
 
-"認知",
+        "薬剤師",
 
-"血圧",
+        "リハビリ"
 
-"ADL",
+      ]
 
-"自宅"
+    );
 
-]
+  /* 現在の状態 */
 
-);
+  const currentRaw=
 
-const riskRaw=
+    findLines(
 
-pick(
+      text,
 
-text,
+      [
 
-[
+        "現在",
 
-"課題",
+        "状態",
 
-"不安",
+        "歩行",
 
-"ふらつ",
+        "歩け",
 
-"転倒",
+        "杖",
 
-"リスク",
+        "歩行器",
 
-"困って",
+        "車椅子",
 
-"困る",
+        "立ち上が",
 
-"低下",
+        "座位",
 
-"難しい",
+        "寝返り",
 
-"危険",
+        "食事",
 
-"注意",
+        "入浴",
 
-"変動",
+        "着替",
 
-"問題",
+        "トイレ",
 
-"見守り",
+        "排泄",
 
-"介助が必要"
+        "更衣",
 
-]
+        "移乗",
 
-);
+        "認知",
 
-const planRaw=
+        "血圧",
 
-pick(
+        "ADL",
 
-text,
+        "自宅"
 
-[
+      ]
 
-"今後",
+    );
 
-"方針",
+  /* 課題・リスク */
 
-"継続",
+  const risksRaw=
 
-"訓練",
+    findLines(
 
-"支援",
+      text,
 
-"目標",
+      [
 
-"次回",
+        "課題",
 
-"再開",
+        "不安",
 
-"取り組む",
+        "ふらつ",
 
-"必要",
+        "転倒",
 
-"予定",
+        "リスク",
 
-"検討"
+        "困って",
 
-]
+        "困る",
 
-);
+        "低下",
 
-const excluded=
+        "難しい",
 
-new Set(
+        "危険",
 
-[
+        "注意",
 
-...wishes,
+        "変動",
 
-...professional
+        "問題",
 
-]
+        "見守り",
 
-);
+        "介助が必要"
 
-const current=
+      ]
 
-without(
+    );
 
-currentRaw,
+  /* 目標・方針 */
 
-excluded
+  const plansRaw=
 
-);
+    findLines(
 
-const risks=
+      text,
 
-without(
+      [
 
-riskRaw,
+        "今後",
 
-excluded
+        "方針",
 
-);
+        "継続",
 
-const plans=
+        "訓練",
 
-without(
+        "支援",
 
-planRaw,
+        "目標",
 
-excluded
+        "次回",
 
-);
+        "再開",
 
-/*
+        "取り組む",
 
-  外出情報は専用に処理。
+        "必要",
 
-  「希望」「目標」「専門職の意見」は
+        "予定",
 
-  外出欄には入れない。
+        "検討"
 
-*/
+      ]
 
-const outingLines=
+    );
 
-pick(
+  /* 重複を整理 */
 
-text,
+  const excluded=
 
-[
+    wishes.concat(
 
-"外出",
+      professional
 
-"買い物",
+    );
 
-"スーパー",
+  const current=
 
-"通院",
+    removeLines(
 
-"地域",
+      currentRaw,
 
-"散歩",
+      excluded
 
-"デイ",
+    );
 
-"デイサービス"
+  const risks=
 
-]
+    removeLines(
 
-);
+      risksRaw,
 
-const outing=
+      excluded
 
-without(
+    );
 
-outingLines,
+  const plans=
 
-new Set([
+    removeLines(
 
-...wishes,
+      plansRaw,
 
-...professional,
+      excluded
 
-...plans
+    );
 
-])
+  /* =========================
 
-);
+     外出情報
 
-const frequency=
+  ========================= */
 
-pick(
+  const outingRaw=
 
-text,
+    findLines(
 
-[
+      text,
 
-"週",
+      [
 
-"月",
+        "外出",
 
-"毎日",
+        "買い物",
 
-"毎週",
+        "スーパー",
 
-"月1",
+        "通院",
 
-"月2",
+        "地域",
 
-"月3",
+        "散歩",
 
-"月4",
+        "デイ",
 
-"頻度",
+        "デイサービス"
 
-"回程度"
+      ]
 
-]
+    );
 
-);
+  const outing=
 
-const transport=
+    removeLines(
 
-pick(
+      outingRaw,
 
-text,
+      wishes
 
-[
+        .concat(professional)
 
-"家族の車",
+        .concat(plans)
 
-"自動車",
+    );
 
-"車",
+  /* 外出頻度 */
 
-"バス",
+  const frequencyLines=
 
-"タクシー",
+    findLines(
 
-"徒歩",
+      text,
 
-"送迎",
+      [
 
-"電車"
+        "週",
 
-]
+        "月",
 
-);
+        "毎日",
 
-/*
+        "毎週",
 
-  頻度・手段は
+        "月1",
 
-  同じ文章をそのまま表示せず、
+        "月2",
 
-  文章から必要な部分だけを取り出す。
+        "月3",
 
-*/
+        "月4",
 
-let frequencyText="要確認";
+        "頻度",
 
-for(const line of frequency){
+        "回程度"
 
-const match=
+      ]
 
-line.match(
+    );
 
-/(?:現在|は)?\s*(週\d+回程度|週\d+回|月\d+回程度|月\d+回|毎日|毎週)/
+  let frequencyText=
 
-);
+    "要確認";
 
-if(match){
+  for(
 
-frequencyText=
+    let i=0;
 
-match[1];
+    i<frequencyLines.length;
 
-break;
+    i++
 
-}
+  ){
 
-}
+    const match=
 
-let transportText="要確認";
+      frequencyLines[i].match(
 
-for(const line of transport){
+        /週\s*\d+回程度|週\s*\d+回|月\s*\d+回程度|月\s*\d+回|毎日|毎週/
 
-if(
+      );
 
-line.includes("家族の車")
+    if(match){
 
-||
+      frequencyText=
 
-line.includes("自動車")
+        match[0].replace(/\s/g,"");
 
-){
+      break;
 
-transportText="家族の車・自動車";
+    }
 
-break;
+  }
 
-}
+  /* 外出手段 */
 
-if(line.includes("送迎")){
+  const transportLines=
 
-transportText="送迎";
+    findLines(
 
-break;
+      text,
 
-}
+      [
 
-if(line.includes("タクシー")){
+        "家族の車",
 
-transportText="タクシー";
+        "自動車",
 
-break;
+        "車",
 
-}
+        "バス",
 
-if(line.includes("バス")){
+        "タクシー",
 
-transportText="バス";
+        "徒歩",
 
-break;
+        "送迎",
 
-}
+        "電車"
 
-if(line.includes("電車")){
+      ]
 
-transportText="電車";
+    );
 
-break;
+  let transportText=
 
-}
+    "要確認";
 
-if(line.includes("徒歩")){
+  for(
 
-transportText="徒歩";
+    let i=0;
 
-break;
+    i<transportLines.length;
 
-}
+    i++
 
-if(line.includes("車")){
+  ){
 
-transportText="車";
+    const line=
 
-break;
+      transportLines[i];
 
-}
+    if(
 
-}
+      line.indexOf("家族の車")!==-1
 
-/*
+    ){
 
-  外出の希望は②にあるので、
+      transportText=
 
-  ⑥では重複させない。
+        "家族の車";
 
-*/
+      break;
 
-const nextItems=[];
+    }
 
-if(risks.length){
+    if(
 
-nextItems.push(
+      line.indexOf("送迎")!==-1
 
-"・課題・リスクの変化を確認"
+    ){
 
-);
+      transportText=
 
-}
+        "送迎";
 
-if(wishes.length){
+      break;
 
-nextItems.push(
+    }
 
-"・本人・家族の希望に対する進捗を確認"
+    if(
 
-);
+      line.indexOf("タクシー")!==-1
 
-}
+    ){
 
-if(professional.length){
+      transportText=
 
-nextItems.push(
+        "タクシー";
 
-"・各専門職の支援内容と経過を確認"
+      break;
 
-);
+    }
 
-}
+    if(
 
-nextItems.push(
+      line.indexOf("バス")!==-1
 
-"・身体機能・ADLの変化を確認"
+    ){
 
-);
+      transportText=
 
-$("summary").textContent=
+        "バス";
+
+      break;
+
+    }
+
+    if(
+
+      line.indexOf("電車")!==-1
+
+    ){
+
+      transportText=
+
+        "電車";
+
+      break;
+
+    }
+
+    if(
+
+      line.indexOf("徒歩")!==-1
+
+    ){
+
+      transportText=
+
+        "徒歩";
+
+      break;
+
+    }
+
+    if(
+
+      line.indexOf("自動車")!==-1
+
+    ){
+
+      transportText=
+
+        "自動車";
+
+      break;
+
+    }
+
+    if(
+
+      line.indexOf("車")!==-1
+
+    ){
+
+      transportText=
+
+        "車";
+
+      break;
+
+    }
+
+  }
+
+  /* =========================
+
+     次回確認事項
+
+  ========================= */
+
+  const nextItems=[];
+
+  if(risks.length){
+
+    nextItems.push(
+
+      "・課題・リスクの変化を確認"
+
+    );
+
+  }
+
+  if(wishes.length){
+
+    nextItems.push(
+
+      "・本人・家族の希望に対する進捗を確認"
+
+    );
+
+  }
+
+  if(professional.length){
+
+    nextItems.push(
+
+      "・各専門職の支援内容と経過を確認"
+
+    );
+
+  }
+
+  nextItems.push(
+
+    "・身体機能・ADLの変化を確認"
+
+  );
+
+  /* =========================
+
+     会議録を表示
+
+  ========================= */
+
+  const result=
 
 `【リハビリテーション会議録（案）】
 
-利用者：${$("name").value||"—"}
+利用者：${$("name").value || "—"}
 
-会議日：${$("date").value||"—"}
+会議日：${$("date").value || "—"}
 
-参加者：${$("staff").value||"—"}
+参加者：${$("staff").value || "—"}
 
 【1. 現在の生活・身体状況】
 
-${show(current)}
+${showLines(current)}
 
 【2. 本人・家族の希望】
 
-${show(wishes)}
+${showLines(wishes)}
 
 【3. 専門職からの意見】
 
-${show(professional)}
+${showLines(professional)}
 
 【4. 生活上の課題・リスク】
 
-${show(risks)}
+${showLines(risks)}
 
 【5. 目標・今後の方針】
 
-${show(plans)}
+${showLines(plans)}
 
 【6. 外出・地域生活】
 
-${show(outing)}
+${showLines(outing)}
 
 外出頻度：${frequencyText}
 
@@ -1338,78 +1474,96 @@ ${show(outing)}
 
 ${nextItems.join("\n")}
 
-※これは会議内容から文章を分類して作成した「案」です。
+※これは会議内容を分類して作成した「案」です。
 
 正式な記録として使用する前に、原文・実際の会議内容と照合して確認してください。`;
 
-};
+  $("summary").textContent=
 
-$("clear").onclick=()=>{
-
-$("text").value="";
-
-$("summary").textContent=
-
-"ここに整理結果が表示されます。";
+    result;
 
 };
 
-$("copy").onclick=async()=>{
+/* =========================
 
-const text=
+   クリア
 
-$("summary").textContent;
+========================= */
 
-if(
+$("clear").onclick=function(){
 
-!text
+  $("text").value="";
 
-||
+  $("summary").textContent=
 
-text==="ここに整理結果が表示されます。"
+    "ここに整理結果が表示されます。";
 
-){
+};
 
-return;
+/* =========================
 
-}
+   コピー
 
-try{
+========================= */
 
-await navigator.clipboard.writeText(
+$("copy").onclick=async function(){
 
-text
+  const text=
 
-);
+    $("summary").textContent;
 
-$("copied").textContent=
+  if(
 
-" コピーしました";
+    !text ||
 
-setTimeout(
+    text==="ここに整理結果が表示されます。"
 
-()=>$("copied").textContent="",
+  ){
 
-1800
+    return;
 
-);
+  }
 
-}
+  try{
 
-catch(e){
+    await navigator.clipboard.writeText(
 
-alert(
+      text
 
-"コピーできませんでした。"
+    );
 
-);
+    $("copied").textContent=
 
-}
+      " コピーしました";
+
+    setTimeout(
+
+      function(){
+
+        $("copied").textContent="";
+
+      },
+
+      1800
+
+    );
+
+  }
+
+  catch(e){
+
+    alert(
+
+      "コピーできませんでした。"
+
+    );
+
+  }
 
 };
 
 </script>
-
+  
 </body>
 
 </html>
