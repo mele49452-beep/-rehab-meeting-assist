@@ -766,8 +766,6 @@ w=>line.includes(w)
 
 )
 
-)
-
 );
 
 }
@@ -1032,7 +1030,17 @@ excluded
 
 );
 
-const outing=
+/*
+
+  外出情報は専用に処理。
+
+  「希望」「目標」「専門職の意見」は
+
+  外出欄には入れない。
+
+*/
+
+const outingLines=
 
 pick(
 
@@ -1057,6 +1065,24 @@ text,
 "デイサービス"
 
 ]
+
+);
+
+const outing=
+
+without(
+
+outingLines,
+
+new Set([
+
+...wishes,
+
+...professional,
+
+...plans
+
+])
 
 );
 
@@ -1100,9 +1126,11 @@ text,
 
 [
 
-"車",
+"家族の車",
 
 "自動車",
+
+"車",
 
 "バス",
 
@@ -1112,13 +1140,123 @@ text,
 
 "送迎",
 
-"家族の車",
-
 "電車"
 
 ]
 
 );
+
+/*
+
+  頻度・手段は
+
+  同じ文章をそのまま表示せず、
+
+  文章から必要な部分だけを取り出す。
+
+*/
+
+let frequencyText="要確認";
+
+for(const line of frequency){
+
+const match=
+
+line.match(
+
+/(?:現在|は)?\s*(週\d+回程度|週\d+回|月\d+回程度|月\d+回|毎日|毎週)/
+
+);
+
+if(match){
+
+frequencyText=
+
+match[1];
+
+break;
+
+}
+
+}
+
+let transportText="要確認";
+
+for(const line of transport){
+
+if(
+
+line.includes("家族の車")
+
+||
+
+line.includes("自動車")
+
+){
+
+transportText="家族の車・自動車";
+
+break;
+
+}
+
+if(line.includes("送迎")){
+
+transportText="送迎";
+
+break;
+
+}
+
+if(line.includes("タクシー")){
+
+transportText="タクシー";
+
+break;
+
+}
+
+if(line.includes("バス")){
+
+transportText="バス";
+
+break;
+
+}
+
+if(line.includes("電車")){
+
+transportText="電車";
+
+break;
+
+}
+
+if(line.includes("徒歩")){
+
+transportText="徒歩";
+
+break;
+
+}
+
+if(line.includes("車")){
+
+transportText="車";
+
+break;
+
+}
+
+}
+
+/*
+
+  外出の希望は②にあるので、
+
+  ⑥では重複させない。
+
+*/
 
 const nextItems=[];
 
@@ -1190,11 +1328,11 @@ ${show(plans)}
 
 【6. 外出・地域生活】
 
-${outing.length?outing.join("\n"):"要確認"}
+${show(outing)}
 
-外出頻度：${show(frequency)}
+外出頻度：${frequencyText}
 
-外出手段：${show(transport)}
+外出手段：${transportText}
 
 【7. 次回までの確認事項】
 
