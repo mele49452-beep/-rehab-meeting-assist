@@ -812,283 +812,247 @@ function showLines(lines){
 
 $("summarize").onclick=function(){
 
-  const text=
-
-    $("text").value.trim();
+  const text=$("text").value.trim();
 
   if(!text){
 
-    alert(
-
-      "先に会議内容を入力してください。"
-
-    );
+    alert("先に会議内容を入力してください。");
 
     return;
 
   }
 
-  /* 本人・家族の希望 */
+  /* =========================
 
-  const wishes=
+     本人・家族の希望
 
-    findLines(
+  ========================= */
 
-      text,
+  const wishes=findLines(
 
-      [
+    text,
 
-        "本人は",
+    [
 
-        "本人が",
+      "本人は",
 
-        "本人の希望",
+      "本人が",
 
-        "本人の意向",
+      "本人の希望",
 
-        "希望",
+      "本人の意向",
 
-        "したい",
+      "希望",
 
-        "行きたい",
+      "したい",
 
-        "やりたい",
+      "行きたい",
 
-        "家族は",
+      "やりたい",
 
-        "家族が",
+      "家族は",
 
-        "家族の希望",
+      "家族が",
 
-        "家族も",
+      "家族の希望",
 
-        "家族として"
+      "家族も",
 
-      ]
+      "家族として"
 
-    );
+    ]
 
-  /* 専門職 */
+  );
 
-  const professional=
+  /* =========================
 
-    findLines(
+     専門職
 
-      text,
+  ========================= */
 
-      [
+  const professional=findLines(
 
-        "PT",
+    text,
 
-        "OT",
+    [
 
-        "ST",
+      "PT",
 
-        "理学療法",
+      "OT",
 
-        "作業療法",
+      "ST",
 
-        "言語聴覚",
+      "理学療法",
 
-        "看護師",
+      "作業療法",
 
-        "看護",
+      "言語聴覚",
 
-        "介護職",
+      "看護師",
 
-        "介護",
+      "看護",
 
-        "ケアマネ",
+      "介護職",
 
-        "ケアマネジャー",
+      "介護",
 
-        "医師",
+      "ケアマネ",
 
-        "歯科",
+      "ケアマネジャー",
 
-        "薬剤師",
+      "医師",
 
-        "リハビリ"
+      "歯科",
 
-      ]
+      "薬剤師",
 
-    );
+      "リハビリ"
 
-  /* 現在の状態 */
+    ]
 
-  const currentRaw=
+  );
 
-    findLines(
+  /* =========================
 
-      text,
+     現在の生活・身体状況
 
-      [
+  ========================= */
 
-        "現在",
+  const current=findLines(
 
-        "状態",
+    text,
 
-        "歩行",
+    [
 
-        "歩け",
+      "現在",
 
-        "杖",
+      "状態",
 
-        "歩行器",
+      "歩行",
 
-        "車椅子",
+      "歩け",
 
-        "立ち上が",
+      "杖",
 
-        "座位",
+      "歩行器",
 
-        "寝返り",
+      "車椅子",
 
-        "食事",
+      "立ち上が",
 
-        "入浴",
+      "座位",
 
-        "着替",
+      "寝返り",
 
-        "トイレ",
+      "食事",
 
-        "排泄",
+      "入浴",
 
-        "更衣",
+      "着替",
 
-        "移乗",
+      "トイレ",
 
-        "認知",
+      "排泄",
 
-        "血圧",
+      "更衣",
 
-        "ADL",
+      "移乗",
 
-        "自宅"
+      "認知",
 
-      ]
+      "血圧",
 
-    );
+      "ADL",
 
-  /* 課題・リスク */
+      "自宅"
 
-  const risksRaw=
+    ]
 
-    findLines(
+  );
 
-      text,
+  /* =========================
 
-      [
+     課題・リスク
 
-        "課題",
+  ========================= */
 
-        "不安",
+  const risks=findLines(
 
-        "ふらつ",
+    text,
 
-        "転倒",
+    [
 
-        "リスク",
+      "課題",
 
-        "困って",
+      "不安",
 
-        "困る",
+      "ふらつ",
 
-        "低下",
+      "転倒",
 
-        "難しい",
+      "リスク",
 
-        "危険",
+      "困って",
 
-        "注意",
+      "困る",
 
-        "変動",
+      "低下",
 
-        "問題",
+      "難しい",
 
-        "見守り",
+      "危険",
 
-        "介助が必要"
+      "注意",
 
-      ]
+      "変動",
 
-    );
+      "問題",
 
-  /* 目標・方針 */
+      "見守り",
 
-  const plansRaw=
+      "介助が必要"
 
-    findLines(
+    ]
 
-      text,
+  );
 
-      [
+  /* =========================
 
-        "今後",
+     目標・今後の方針
 
-        "方針",
+  ========================= */
 
-        "継続",
+  const plans=findLines(
 
-        "訓練",
+    text,
 
-        "支援",
+    [
 
-        "目標",
+      "今後",
 
-        "次回",
+      "方針",
 
-        "再開",
+      "継続",
 
-        "取り組む",
+      "訓練",
 
-        "必要",
+      "支援",
 
-        "予定",
+      "目標",
 
-        "検討"
+      "次回",
 
-      ]
+      "再開",
 
-    );
+      "取り組む",
 
-  const excluded=
+      "予定",
 
-    wishes.concat(
+      "検討"
 
-      professional
+    ]
 
-    );
-
-  const current=
-
-    removeLines(
-
-      currentRaw,
-
-      excluded
-
-    );
-
-  const risks=
-
-    removeLines(
-
-      risksRaw,
-
-      excluded
-
-    );
-
-  const plans=
-
-    removeLines(
-
-      plansRaw,
-
-      excluded
-
-    );
+  );
 
   /* =========================
 
@@ -1096,103 +1060,63 @@ $("summarize").onclick=function(){
 
   ========================= */
 
-  const outingRaw=
+  const outingLines=findLines(
 
-    findLines(
+    text,
 
-      text,
+    [
 
-      [
+      "外出",
 
-        "外出",
+      "買い物",
 
-        "買い物",
+      "スーパー",
 
-        "スーパー",
+      "通院",
 
-        "通院",
+      "地域",
 
-        "地域",
+      "散歩",
 
-        "散歩",
+      "デイ",
 
-        "デイ",
+      "デイサービス"
 
-        "デイサービス"
+    ]
 
-      ]
+  );
 
-    );
+  /* =========================
 
-  /*
+     外出頻度
 
-    希望・専門職意見・目標は
+  ========================= */
 
-    外出欄から除外
+  const frequencyLines=findLines(
 
-  */
+    text,
 
-  const outing=
+    [
 
-    removeLines(
+      "週",
 
-      outingRaw,
+      "月",
 
-      wishes
+      "毎日",
 
-        .concat(professional)
+      "毎週",
 
-        .concat(plans)
+      "頻度",
 
-    );
+      "回程度"
 
-  /* 外出頻度 */
+    ]
 
-  const frequencyLines=
+  );
 
-    findLines(
+  let frequencyText="要確認";
 
-      text,
-
-      [
-
-        "週",
-
-        "月",
-
-        "毎日",
-
-        "毎週",
-
-        "月1",
-
-        "月2",
-
-        "月3",
-
-        "月4",
-
-        "頻度",
-
-        "回程度"
-
-      ]
-
-    );
-
-  let frequencyText=
-
-    "要確認";
-
-  for(
-
-    let i=0;
-
-    i<frequencyLines.length;
-
-    i++
-
-  ){
+  for(let i=0;i<frequencyLines.length;i++){
 
     const match=
 
@@ -1214,53 +1138,43 @@ $("summarize").onclick=function(){
 
   }
 
-  /* 外出手段 */
+  /* =========================
 
-  const transportLines=
+     外出手段
 
-    findLines(
+  ========================= */
 
-      text,
+  const transportLines=findLines(
 
-      [
+    text,
 
-        "家族の車",
+    [
 
-        "自動車",
+      "家族の車",
 
-        "車",
+      "自動車",
 
-        "バス",
+      "車",
 
-        "タクシー",
+      "バス",
 
-        "徒歩",
+      "タクシー",
 
-        "送迎",
+      "徒歩",
 
-        "電車"
+      "送迎",
 
-      ]
+      "電車"
 
-    );
+    ]
 
-  let transportText=
+  );
 
-    "要確認";
+  let transportText="要確認";
 
-  for(
+  for(let i=0;i<transportLines.length;i++){
 
-    let i=0;
-
-    i<transportLines.length;
-
-    i++
-
-  ){
-
-    const line=
-
-      transportLines[i];
+    const line=transportLines[i];
 
     if(line.indexOf("家族の車")!==-1){
 
@@ -1330,6 +1244,46 @@ $("summarize").onclick=function(){
 
   /* =========================
 
+     外出に関する文章
+
+     ※頻度・手段だけを除外
+
+  ========================= */
+
+  const outingDetails=[];
+
+  for(let i=0;i<outingLines.length;i++){
+
+    const line=outingLines[i];
+
+    const isFrequency=
+
+      frequencyLines.indexOf(line)!==-1;
+
+    const isTransport=
+
+      transportLines.indexOf(line)!==-1;
+
+    if(!isFrequency && !isTransport){
+
+      outingDetails.push(line);
+
+    }
+
+  }
+
+  /* =========================
+
+     重複を削除
+
+  ========================= */
+
+  const uniqueOuting=
+
+    unique(outingDetails);
+
+  /* =========================
+
      次回確認事項
 
   ========================= */
@@ -1374,7 +1328,7 @@ $("summarize").onclick=function(){
 
   /* =========================
 
-     会議録
+     会議録を作成
 
   ========================= */
 
@@ -1414,17 +1368,7 @@ ${showLines(plans)}
 
 外出手段：${transportText}
 
-${showLines(
-
-  removeLines(
-
-    outing,
-
-    frequencyLines.concat(transportLines)
-
-  )
-
-)}
+${showLines(uniqueOuting)}
 
 【7. 次回までの確認事項】
 
@@ -1434,11 +1378,9 @@ ${nextItems.join("\n")}
 
 正式な記録として使用する前に、原文・実際の会議内容と照合して確認してください。`;
 
-  $("summary").textContent=
+  $("summary").textContent=result;
 
-    result;
-
-};
+}
 
 /* =========================
 
