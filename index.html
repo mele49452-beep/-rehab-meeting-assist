@@ -824,45 +824,593 @@ $("summarize").onclick=function(){
 
   /* =========================
 
-     本人・家族の希望
+     文章を1行ずつ分ける
 
   ========================= */
 
-  const wishes=findLines(
+  const lines=text
 
-    text,
+    .split(/\n+/)
 
-    [
+    .map(function(line){
 
-      "本人は",
+      return line.trim();
 
-      "本人が",
+    })
 
-      "本人の希望",
+    .filter(function(line){
 
-      "本人の意向",
+      return line.length>0;
 
-      "希望",
+    });
 
-      "したい",
+  /* =========================
 
-      "行きたい",
+     分類用の配列
 
-      "やりたい",
+  ========================= */
 
-      "家族は",
+  const current=[];
 
-      "家族が",
+  const wishes=[];
 
-      "家族の希望",
+  const professional=[];
 
-      "家族も",
+  const risks=[];
 
-      "家族として"
+  const plans=[];
 
-    ]
+  const outing=[];
+
+  /* =========================
+
+     1行につき1カテゴリー
+
+     優先順位をつけて分類
+
+  ========================= */
+
+  for(let i=0;i<lines.length;i++){
+
+    const line=lines[i];
+
+    /* -------------------------
+
+       ① 専門職の意見
+
+       最優先
+
+    ------------------------- */
+
+    if(
+
+      line.indexOf("PT")!==-1 ||
+
+      line.indexOf("OT")!==-1 ||
+
+      line.indexOf("ST")!==-1 ||
+
+      line.indexOf("理学療法")!==-1 ||
+
+      line.indexOf("作業療法")!==-1 ||
+
+      line.indexOf("言語聴覚")!==-1 ||
+
+      line.indexOf("看護師")!==-1 ||
+
+      line.indexOf("看護")!==-1 ||
+
+      line.indexOf("介護職")!==-1 ||
+
+      line.indexOf("ケアマネ")!==-1 ||
+
+      line.indexOf("医師")!==-1 ||
+
+      line.indexOf("薬剤師")!==-1
+
+    ){
+
+      professional.push(line);
+
+      continue;
+
+    }
+
+    /* -------------------------
+
+       ② 本人・家族の希望
+
+    ------------------------- */
+
+    if(
+
+      line.indexOf("本人は")!==-1 ||
+
+      line.indexOf("本人が")!==-1 ||
+
+      line.indexOf("本人の希望")!==-1 ||
+
+      line.indexOf("本人の意向")!==-1 ||
+
+      line.indexOf("本人として")!==-1 ||
+
+      line.indexOf("家族は")!==-1 ||
+
+      line.indexOf("家族が")!==-1 ||
+
+      line.indexOf("家族の希望")!==-1 ||
+
+      line.indexOf("家族も")!==-1 ||
+
+      line.indexOf("家族として")!==-1 ||
+
+      line.indexOf("希望して")!==-1 ||
+
+      line.indexOf("希望する")!==-1 ||
+
+      line.indexOf("したい")!==-1 ||
+
+      line.indexOf("行きたい")!==-1 ||
+
+      line.indexOf("やりたい")!==-1
+
+    ){
+
+      wishes.push(line);
+
+      continue;
+
+    }
+
+    /* -------------------------
+
+       ③ 課題・リスク
+
+    ------------------------- */
+
+    if(
+
+      line.indexOf("課題")!==-1 ||
+
+      line.indexOf("ふらつ")!==-1 ||
+
+      line.indexOf("転倒")!==-1 ||
+
+      line.indexOf("リスク")!==-1 ||
+
+      line.indexOf("不安")!==-1 ||
+
+      line.indexOf("困って")!==-1 ||
+
+      line.indexOf("困る")!==-1 ||
+
+      line.indexOf("低下")!==-1 ||
+
+      line.indexOf("難しい")!==-1 ||
+
+      line.indexOf("危険")!==-1 ||
+
+      line.indexOf("注意が必要")!==-1 ||
+
+      line.indexOf("問題")!==-1 ||
+
+      line.indexOf("見守り")!==-1 ||
+
+      line.indexOf("介助が必要")!==-1
+
+    ){
+
+      risks.push(line);
+
+      continue;
+
+    }
+
+    /* -------------------------
+
+       ④ 目標・今後の方針
+
+       ※希望は上で処理済み
+
+    ------------------------- */
+
+    if(
+
+      line.indexOf("今後は")!==-1 ||
+
+      line.indexOf("今後")!==-1 ||
+
+      line.indexOf("方針")!==-1 ||
+
+      line.indexOf("目標とする")!==-1 ||
+
+      line.indexOf("目標")!==-1 ||
+
+      line.indexOf("継続する")!==-1 ||
+
+      line.indexOf("継続")!==-1 ||
+
+      line.indexOf("訓練を")!==-1 ||
+
+      line.indexOf("支援を")!==-1 ||
+
+      line.indexOf("取り組む")!==-1 ||
+
+      line.indexOf("検討する")!==-1 ||
+
+      line.indexOf("予定")!==-1
+
+    ){
+
+      plans.push(line);
+
+      continue;
+
+    }
+
+    /* -------------------------
+
+       ⑤ 外出・地域生活
+
+    ------------------------- */
+
+    if(
+
+      line.indexOf("外出")!==-1 ||
+
+      line.indexOf("買い物")!==-1 ||
+
+      line.indexOf("スーパー")!==-1 ||
+
+      line.indexOf("通院")!==-1 ||
+
+      line.indexOf("地域")!==-1 ||
+
+      line.indexOf("散歩")!==-1 ||
+
+      line.indexOf("デイサービス")!==-1 ||
+
+      line.indexOf("週")!==-1 ||
+
+      line.indexOf("月")!==-1 ||
+
+      line.indexOf("毎日")!==-1
+
+    ){
+
+      outing.push(line);
+
+      continue;
+
+    }
+
+    /* -------------------------
+
+       ⑥ その他は現在の状況
+
+    ------------------------- */
+
+    current.push(line);
+
+  }
+
+  /* =========================
+
+     重複削除
+
+  ========================= */
+
+  function unique(list){
+
+    const result=[];
+
+    for(let i=0;i<list.length;i++){
+
+      if(result.indexOf(list[i])===-1){
+
+        result.push(list[i]);
+
+      }
+
+    }
+
+    return result;
+
+  }
+
+  function show(list){
+
+    if(!list.length){
+
+      return "要確認";
+
+    }
+
+    return unique(list).join("\n");
+
+  }
+
+  /* =========================
+
+     外出頻度
+
+  ========================= */
+
+  let frequency="要確認";
+
+  for(let i=0;i<outing.length;i++){
+
+    const match=
+
+      outing[i].match(
+
+        /週\s*\d+回程度|週\s*\d+回|月\s*\d+回程度|月\s*\d+回|毎日|毎週/
+
+      );
+
+    if(match){
+
+      frequency=
+
+        match[0].replace(/\s/g,"");
+
+      break;
+
+    }
+
+  }
+
+  /* =========================
+
+     外出手段
+
+  ========================= */
+
+  let transport="要確認";
+
+  for(let i=0;i<outing.length;i++){
+
+    const line=outing[i];
+
+    if(line.indexOf("家族の車")!==-1){
+
+      transport="家族の車";
+
+      break;
+
+    }
+
+    if(line.indexOf("送迎")!==-1){
+
+      transport="送迎";
+
+      break;
+
+    }
+
+    if(line.indexOf("タクシー")!==-1){
+
+      transport="タクシー";
+
+      break;
+
+    }
+
+    if(line.indexOf("バス")!==-1){
+
+      transport="バス";
+
+      break;
+
+    }
+
+    if(line.indexOf("電車")!==-1){
+
+      transport="電車";
+
+      break;
+
+    }
+
+    if(line.indexOf("徒歩")!==-1){
+
+      transport="徒歩";
+
+      break;
+
+    }
+
+    if(line.indexOf("自動車")!==-1){
+
+      transport="自動車";
+
+      break;
+
+    }
+
+    if(line.indexOf("車")!==-1){
+
+      transport="車";
+
+      break;
+
+    }
+
+  }
+
+  /* =========================
+
+     外出欄の文章
+
+     頻度・手段だけの文章を除外
+
+  ========================= */
+
+  const outingDetails=[];
+
+  for(let i=0;i<outing.length;i++){
+
+    const line=outing[i];
+
+    const onlyFrequency=
+
+      /^外出は現在?週\s*\d+回程度[。、]?$/.test(line) ||
+
+      /^外出は週\s*\d+回程度[。、]?$/.test(line);
+
+    const hasFrequency=
+
+      line.indexOf("週")!==-1 &&
+
+      line.indexOf("外出")!==-1;
+
+    const hasTransport=
+
+      line.indexOf("家族の車")!==-1 ||
+
+      line.indexOf("自動車")!==-1 ||
+
+      line.indexOf("送迎")!==-1 ||
+
+      line.indexOf("タクシー")!==-1 ||
+
+      line.indexOf("バス")!==-1 ||
+
+      line.indexOf("電車")!==-1 ||
+
+      line.indexOf("徒歩")!==-1;
+
+    /*
+
+      頻度・手段だけの情報は
+
+      下の専用項目に表示するので
+
+      文章欄には重ねて表示しない
+
+    */
+
+    if(
+
+      onlyFrequency ||
+
+      (
+
+        hasFrequency &&
+
+        hasTransport
+
+      )
+
+    ){
+
+      continue;
+
+    }
+
+    outingDetails.push(line);
+
+  }
+
+  /* =========================
+
+     次回確認事項
+
+  ========================= */
+
+  const nextItems=[];
+
+  if(risks.length){
+
+    nextItems.push(
+
+      "・課題・リスクの変化を確認"
+
+    );
+
+  }
+
+  if(wishes.length){
+
+    nextItems.push(
+
+      "・本人・家族の希望に対する進捗を確認"
+
+    );
+
+  }
+
+  if(professional.length){
+
+    nextItems.push(
+
+      "・各専門職の支援内容と経過を確認"
+
+    );
+
+  }
+
+  nextItems.push(
+
+    "・身体機能・ADLの変化を確認"
 
   );
+
+  /* =========================
+
+     会議録
+
+  ========================= */
+
+  const result=
+
+`【リハビリテーション会議録（案）】
+
+利用者：${$("name").value || "—"}
+
+会議日：${$("date").value || "—"}
+
+参加者：${$("staff").value || "—"}
+
+【1. 現在の生活・身体状況】
+
+${show(current)}
+
+【2. 本人・家族の希望】
+
+${show(wishes)}
+
+【3. 専門職からの意見】
+
+${show(professional)}
+
+【4. 生活上の課題・リスク】
+
+${show(risks)}
+
+【5. 目標・今後の方針】
+
+${show(plans)}
+
+【6. 外出・地域生活】
+
+外出頻度：${frequency}
+
+外出手段：${transport}
+
+${show(outingDetails)}
+
+【7. 次回までの確認事項】
+
+${nextItems.join("\n")}
+
+※これは会議内容を自動分類して作成した「案」です。
+
+正式な記録として使用する前に、原文・実際の会議内容と照合して確認してください。`;
+
+  $("summary").textContent=result;
+
+};
 
   /* =========================
 
