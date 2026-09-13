@@ -724,7 +724,21 @@ $("summarize").onclick=function(){
 
   }
 
-  const lines=getLines(text);
+  const lines=text
+
+    .split(/\n+/)
+
+    .map(function(line){
+
+      return line.trim();
+
+    })
+
+    .filter(function(line){
+
+      return line.length>0;
+
+    });
 
   const current=[];
 
@@ -738,21 +752,45 @@ $("summarize").onclick=function(){
 
   const outing=[];
 
-  /* =========================
-
-     1行ずつ分類
-
-  ========================= */
+  const nextItems=[];
 
   for(let i=0;i<lines.length;i++){
 
     const line=lines[i];
 
-    /* -------------------------
+    /* =========================
 
-       専門職
+       ⑦ 次回までの確認事項
 
-    ------------------------- */
+       最優先で分類
+
+    ========================= */
+
+    if(
+
+      line.indexOf("次回までに")!==-1 ||
+
+      line.indexOf("次回は")!==-1 ||
+
+      line.indexOf("次回")!==-1 ||
+
+      line.indexOf("確認する")!==-1 ||
+
+      line.indexOf("確認していく")!==-1
+
+    ){
+
+      nextItems.push(line);
+
+      continue;
+
+    }
+
+    /* =========================
+
+       ③ 専門職からの意見
+
+    ========================= */
 
     if(
 
@@ -788,11 +826,11 @@ $("summarize").onclick=function(){
 
     }
 
-    /* -------------------------
+    /* =========================
 
-       本人・家族の希望
+       ② 本人・家族の希望
 
-    ------------------------- */
+    ========================= */
 
     if(
 
@@ -804,17 +842,21 @@ $("summarize").onclick=function(){
 
       line.indexOf("本人の意向")!==-1 ||
 
+      line.indexOf("本人も")!==-1 ||
+
       line.indexOf("家族は")!==-1 ||
 
       line.indexOf("家族が")!==-1 ||
 
-      line.indexOf("家族の希望")!==-1 ||
-
       line.indexOf("家族も")!==-1 ||
+
+      line.indexOf("家族の希望")!==-1 ||
 
       line.indexOf("希望して")!==-1 ||
 
       line.indexOf("希望する")!==-1 ||
+
+      line.indexOf("希望している")!==-1 ||
 
       line.indexOf("したい")!==-1 ||
 
@@ -830,11 +872,49 @@ $("summarize").onclick=function(){
 
     }
 
-    /* -------------------------
+    /* =========================
 
-       課題・リスク
+       ⑥ 外出・地域生活
 
-    ------------------------- */
+    ========================= */
+
+    if(
+
+      line.indexOf("外出")!==-1 ||
+
+      line.indexOf("買い物")!==-1 ||
+
+      line.indexOf("スーパー")!==-1 ||
+
+      line.indexOf("通院")!==-1 ||
+
+      line.indexOf("地域")!==-1 ||
+
+      line.indexOf("散歩")!==-1 ||
+
+      line.indexOf("デイサービス")!==-1 ||
+
+      line.indexOf("週")!==-1 ||
+
+      line.indexOf("月")!==-1 ||
+
+      line.indexOf("毎日")!==-1 ||
+
+      line.indexOf("毎週")!==-1
+
+    ){
+
+      outing.push(line);
+
+      continue;
+
+    }
+
+    /* =========================
+
+       ④ 生活上の課題・リスク
+
+    ========================= */
 
     if(
 
@@ -862,7 +942,7 @@ $("summarize").onclick=function(){
 
       line.indexOf("問題")!==-1 ||
 
-      line.indexOf("見守り")!==-1 ||
+      line.indexOf("見守りが必要")!==-1 ||
 
       line.indexOf("介助が必要")!==-1
 
@@ -874,11 +954,11 @@ $("summarize").onclick=function(){
 
     }
 
-    /* -------------------------
+    /* =========================
 
-       目標・今後の方針
+       ⑤ 目標・今後の方針
 
-    ------------------------- */
+    ========================= */
 
     if(
 
@@ -914,51 +994,13 @@ $("summarize").onclick=function(){
 
     }
 
-    /* -------------------------
+    /* =========================
 
-       外出・地域生活
+       ① 現在の生活・身体状況
 
-    ------------------------- */
+       その他はこちら
 
-    if(
-
-      line.indexOf("外出")!==-1 ||
-
-      line.indexOf("買い物")!==-1 ||
-
-      line.indexOf("スーパー")!==-1 ||
-
-      line.indexOf("通院")!==-1 ||
-
-      line.indexOf("地域")!==-1 ||
-
-      line.indexOf("散歩")!==-1 ||
-
-      line.indexOf("デイサービス")!==-1 ||
-
-      line.indexOf("週")!==-1 ||
-
-      line.indexOf("月")!==-1 ||
-
-      line.indexOf("毎日")!==-1 ||
-
-      line.indexOf("毎週")!==-1
-
-    ){
-
-      outing.push(line);
-
-      continue;
-
-    }
-
-    /* -------------------------
-
-       その他
-
-       → 現在の生活・身体状況
-
-    ------------------------- */
+    ========================= */
 
     current.push(line);
 
@@ -982,9 +1024,7 @@ $("summarize").onclick=function(){
 
     if(match){
 
-      frequency=
-
-        match[0].replace(/\s/g,"");
+      frequency=match[0].replace(/\s/g,"");
 
       break;
 
@@ -1074,6 +1114,8 @@ $("summarize").onclick=function(){
 
      外出の詳細
 
+     頻度・手段だけの文章を除外
+
   ========================= */
 
   const outingDetails=[];
@@ -1086,11 +1128,13 @@ $("summarize").onclick=function(){
 
       /^(外出は)?\s*(現在)?\s*(週|月)\s*\d+回程度[。、]?$/.test(line) ||
 
+      /^(外出は)?\s*(現在)?\s*(週|月)\s*\d+回[。、]?$/.test(line) ||
+
       /^(外出は)?\s*(毎日|毎週)[。、]?$/.test(line);
 
     const onlyTransport=
 
-      /^外出.*(家族の車|自動車|送迎|タクシー|バス|電車|徒歩)[。、]?$/.test(line);
+      /^外出.*(家族の車|自動車|送迎|タクシー|バス|電車|徒歩|車)[。、]?$/.test(line);
 
     if(
 
@@ -1110,47 +1154,67 @@ $("summarize").onclick=function(){
 
   /* =========================
 
+     重複を削除
+
+  ========================= */
+
+  function unique(list){
+
+    const result=[];
+
+    for(let i=0;i<list.length;i++){
+
+      if(result.indexOf(list[i])===-1){
+
+        result.push(list[i]);
+
+      }
+
+    }
+
+    return result;
+
+  }
+
+  function showLines(list){
+
+    const result=unique(list);
+
+    if(!result.length){
+
+      return "要確認";
+
+    }
+
+    return result.join("\n");
+
+  }
+
+  /* =========================
+
      次回確認事項
 
   ========================= */
 
-  const nextItems=[];
-
   if(risks.length){
 
-    nextItems.push(
-
-      "・課題・リスクの変化を確認"
-
-    );
+    nextItems.push("・課題・リスクの変化を確認");
 
   }
 
   if(wishes.length){
 
-    nextItems.push(
-
-      "・本人・家族の希望に対する進捗を確認"
-
-    );
+    nextItems.push("・本人・家族の希望に対する進捗を確認");
 
   }
 
   if(professional.length){
 
-    nextItems.push(
-
-      "・各専門職の支援内容と経過を確認"
-
-    );
+    nextItems.push("・各専門職の支援内容と経過を確認");
 
   }
 
-  nextItems.push(
-
-    "・身体機能・ADLの変化を確認"
-
-  );
+  nextItems.push("・身体機能・ADLの変化を確認");
 
   /* =========================
 
@@ -1198,7 +1262,7 @@ ${showLines(outingDetails)}
 
 【7. 次回までの確認事項】
 
-${nextItems.join("\n")}
+${unique(nextItems).join("\n")}
 
 ※これは会議内容を自動分類して作成した「案」です。
 
