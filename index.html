@@ -30,7 +30,7 @@ header{
 
   background:#0b6efd;
 
-  color:#fff;
+  color:white;
 
   padding:28px 18px;
 
@@ -64,7 +64,7 @@ main{
 
 .card{
 
-  background:#fff;
+  background:white;
 
   border-radius:16px;
 
@@ -92,9 +92,7 @@ label{
 
 }
 
-input,
-
-textarea{
+input,textarea{
 
   width:100%;
 
@@ -106,7 +104,7 @@ textarea{
 
   font:inherit;
 
-  background:#fff;
+  background:white;
 
 }
 
@@ -138,7 +136,7 @@ button{
 
   background:#0b6efd;
 
-  color:#fff;
+  color:white;
 
 }
 
@@ -204,9 +202,9 @@ button:disabled{
 
   padding:14px;
 
-  line-height:1.8;
+  line-height:1.7;
 
-  min-height:180px;
+  min-height:120px;
 
 }
 
@@ -217,26 +215,6 @@ button:disabled{
   grid-template-columns:1fr 1fr;
 
   gap:10px;
-
-}
-
-.badge{
-
-  display:inline-block;
-
-  padding:4px 8px;
-
-  border-radius:999px;
-
-  background:#e8f1ff;
-
-  color:#0759c7;
-
-  font-size:12px;
-
-  font-weight:700;
-
-  margin-bottom:8px;
 
 }
 
@@ -270,35 +248,13 @@ button:disabled{
 
 <h2>🎙️ マイク録音</h2>
 
-<div id="status" class="status">
+<div id="status" class="status">準備OK</div>
 
-準備OK
+<button id="start" class="primary">録音開始</button>
 
-</div>
+<button id="stop" disabled>録音停止</button>
 
-<button id="start" class="primary">
-
-録音開始
-
-</button>
-
-<button id="stop" disabled>
-
-録音停止
-
-</button>
-
-<audio
-
-id="audio"
-
-controls
-
-hidden
-
-style="width:100%;margin-top:12px">
-
-</audio>
+<audio id="audio" controls hidden style="width:100%;margin-top:12px"></audio>
 
 <p class="hint">
 
@@ -308,7 +264,7 @@ SafariでHTTPSのページとして開き、録音開始時にマイクの使用
 
 <p class="privacy">
 
-🔒 現在の録音はこのページ内で再生するだけです。
+🔒 録音データはこのページ内で再生するだけです。
 
 外部サーバーへアップロードする処理は入れていません。
 
@@ -324,49 +280,25 @@ SafariでHTTPSのページとして開き、録音開始時にマイクの使用
 
 <div>
 
-<label for="name">
+<label for="name">利用者</label>
 
-利用者
-
-</label>
-
-<input
-
-id="name"
-
-placeholder="例：Aさん">
+<input id="name" placeholder="例：Aさん">
 
 </div>
 
 <div>
 
-<label for="date">
+<label for="date">会議日</label>
 
-会議日
-
-</label>
-
-<input
-
-id="date"
-
-type="date">
+<input id="date" type="date">
 
 </div>
 
 </div>
 
-<label for="staff">
+<label for="staff">参加者</label>
 
-参加者
-
-</label>
-
-<input
-
-id="staff"
-
-placeholder="例：PT、OT、看護師、介護職、ケアマネ">
+<input id="staff" placeholder="例：PT、OT、看護師、介護職、ケアマネ">
 
 </section>
 
@@ -374,17 +306,13 @@ placeholder="例：PT、OT、看護師、介護職、ケアマネ">
 
 <h2>📝 会議内容</h2>
 
-<textarea
-
-id="text"
-
-placeholder="会議内容・文字起こし結果をここに入力します"></textarea>
+<textarea id="text" placeholder="会議内容・文字起こし結果をここに入力します"></textarea>
 
 <p class="hint">
 
-※現在は外部AIを使わないテスト版です。
+※現在は整理機能のテスト版です。
 
-入力内容はこのブラウザ内で整理します。
+入力内容を外部AIへ送信せず、このブラウザ内だけで整理します。
 
 </p>
 
@@ -405,12 +333,6 @@ placeholder="会議内容・文字起こし結果をここに入力します"></
 <section class="card">
 
 <h2>📋 リハビリ会議録（案）</h2>
-
-<div class="badge">
-
-分類・重複を減らした下書き
-
-</div>
 
 <div id="summary" class="summary">
 
@@ -440,15 +362,11 @@ let chunks=[];
 
 let recordedUrl=null;
 
-const $=function(id){
-
-  return document.getElementById(id);
-
-};
+const $=id=>document.getElementById(id);
 
 /* =========================
 
-   録音
+   録音機能
 
 ========================= */
 
@@ -466,37 +384,21 @@ function getSupportedMimeType(){
 
   ];
 
-  for(let i=0;i<types.length;i++){
+  return types.find(type =>
 
-    if(
+    typeof MediaRecorder.isTypeSupported==="function" &&
 
-      typeof MediaRecorder.isTypeSupported==="function" &&
+    MediaRecorder.isTypeSupported(type)
 
-      MediaRecorder.isTypeSupported(types[i])
-
-    ){
-
-      return types[i];
-
-    }
-
-  }
-
-  return "";
+  ) || "";
 
 }
 
-$("start").onclick=async function(){
+$("start").onclick=async()=>{
 
   try{
 
-    if(
-
-      !navigator.mediaDevices ||
-
-      !navigator.mediaDevices.getUserMedia
-
-    ){
+    if(!navigator.mediaDevices?.getUserMedia){
 
       throw new Error("HTTPSで公開されたページではありません");
 
@@ -520,11 +422,11 @@ $("start").onclick=async function(){
 
     recorder=mimeType
 
-      ? new MediaRecorder(stream,{mimeType:mimeType})
+      ? new MediaRecorder(stream,{mimeType})
 
       : new MediaRecorder(stream);
 
-    recorder.ondataavailable=function(e){
+    recorder.ondataavailable=e=>{
 
       if(e.data && e.data.size){
 
@@ -534,7 +436,15 @@ $("start").onclick=async function(){
 
     };
 
-    recorder.onstop=function(){
+    recorder.onerror=()=>{
+
+      $("status").textContent=
+
+        "録音中にエラーが発生しました。";
+
+    };
+
+    recorder.onstop=()=>{
 
       const type=
 
@@ -568,15 +478,7 @@ $("start").onclick=async function(){
 
       audio.load();
 
-      if(stream){
-
-        stream.getTracks().forEach(function(track){
-
-          track.stop();
-
-        });
-
-      }
+      stream?.getTracks().forEach(t=>t.stop());
 
       stream=null;
 
@@ -596,19 +498,9 @@ $("start").onclick=async function(){
 
       "🔴 録音中です…";
 
-  }
+  }catch(e){
 
-  catch(e){
-
-    if(stream){
-
-      stream.getTracks().forEach(function(track){
-
-        track.stop();
-
-      });
-
-    }
+    stream?.getTracks().forEach(t=>t.stop());
 
     stream=null;
 
@@ -626,15 +518,9 @@ $("start").onclick=async function(){
 
 };
 
-$("stop").onclick=function(){
+$("stop").onclick=()=>{
 
-  if(
-
-    recorder &&
-
-    recorder.state==="recording"
-
-  ){
+  if(recorder?.state==="recording"){
 
     $("status").textContent=
 
@@ -652,67 +538,11 @@ $("stop").onclick=function(){
 
 /* =========================
 
-   文章処理
+   会議内容の整理
 
 ========================= */
 
-function getLines(text){
-
-  return text
-
-    .split(/\n+/)
-
-    .map(function(line){
-
-      return line.trim();
-
-    })
-
-    .filter(function(line){
-
-      return line.length>0;
-
-    });
-
-}
-
-function unique(list){
-
-  const result=[];
-
-  for(let i=0;i<list.length;i++){
-
-    if(result.indexOf(list[i])===-1){
-
-      result.push(list[i]);
-
-    }
-
-  }
-
-  return result;
-
-}
-
-function showLines(list){
-
-  if(!list.length){
-
-    return "要確認";
-
-  }
-
-  return unique(list).join("\n");
-
-}
-
-/* =========================
-
-   会議内容整理
-
-========================= */
-
-$("summarize").onclick=function(){
+$("summarize").onclick=()=>{
 
   const text=$("text").value.trim();
 
@@ -728,17 +558,9 @@ $("summarize").onclick=function(){
 
     .split(/\n+/)
 
-    .map(function(line){
+    .map(line=>line.trim())
 
-      return line.trim();
-
-    })
-
-    .filter(function(line){
-
-      return line.length>0;
-
-    });
+    .filter(line=>line.length>0);
 
   const current=[];
 
@@ -754,31 +576,39 @@ $("summarize").onclick=function(){
 
   const nextItems=[];
 
+  function has(line,words){
+
+    return words.some(word =>
+
+      line.indexOf(word)!==-1
+
+    );
+
+  }
+
   for(let i=0;i<lines.length;i++){
 
     const line=lines[i];
 
-    /* =========================
+    /* =====================
 
-       ⑦ 次回までの確認事項
+       ⑦ 次回までの確認
 
-       最優先で分類
+       「次回」が明確な場合だけ
 
-    ========================= */
+    ===================== */
 
-    if(
+    if(has(line,[
 
-      line.indexOf("次回までに")!==-1 ||
+      "次回までに",
 
-      line.indexOf("次回は")!==-1 ||
+      "次回は",
 
-      line.indexOf("次回")!==-1 ||
+      "次回確認",
 
-      line.indexOf("確認する")!==-1 ||
+      "次回まで"
 
-      line.indexOf("確認していく")!==-1
-
-    ){
+    ])){
 
       nextItems.push(line);
 
@@ -786,39 +616,39 @@ $("summarize").onclick=function(){
 
     }
 
-    /* =========================
+    /* =====================
 
-       ③ 専門職からの意見
+       ③ 専門職
 
-    ========================= */
+    ===================== */
 
-    if(
+    if(has(line,[
 
-      line.indexOf("PT")!==-1 ||
+      "PT",
 
-      line.indexOf("OT")!==-1 ||
+      "OT",
 
-      line.indexOf("ST")!==-1 ||
+      "ST",
 
-      line.indexOf("理学療法")!==-1 ||
+      "理学療法",
 
-      line.indexOf("作業療法")!==-1 ||
+      "作業療法",
 
-      line.indexOf("言語聴覚")!==-1 ||
+      "言語聴覚",
 
-      line.indexOf("看護師")!==-1 ||
+      "看護師",
 
-      line.indexOf("看護")!==-1 ||
+      "看護",
 
-      line.indexOf("介護職")!==-1 ||
+      "介護職",
 
-      line.indexOf("ケアマネ")!==-1 ||
+      "ケアマネ",
 
-      line.indexOf("医師")!==-1 ||
+      "医師",
 
-      line.indexOf("薬剤師")!==-1
+      "薬剤師"
 
-    ){
+    ])){
 
       professional.push(line);
 
@@ -826,45 +656,45 @@ $("summarize").onclick=function(){
 
     }
 
-    /* =========================
+    /* =====================
 
        ② 本人・家族の希望
 
-    ========================= */
+    ===================== */
 
-    if(
+    if(has(line,[
 
-      line.indexOf("本人は")!==-1 ||
+      "本人は",
 
-      line.indexOf("本人が")!==-1 ||
+      "本人が",
 
-      line.indexOf("本人の希望")!==-1 ||
+      "本人の希望",
 
-      line.indexOf("本人の意向")!==-1 ||
+      "本人の意向",
 
-      line.indexOf("本人も")!==-1 ||
+      "本人も",
 
-      line.indexOf("家族は")!==-1 ||
+      "家族は",
 
-      line.indexOf("家族が")!==-1 ||
+      "家族が",
 
-      line.indexOf("家族も")!==-1 ||
+      "家族も",
 
-      line.indexOf("家族の希望")!==-1 ||
+      "家族の希望",
 
-      line.indexOf("希望して")!==-1 ||
+      "希望して",
 
-      line.indexOf("希望する")!==-1 ||
+      "希望する",
 
-      line.indexOf("希望している")!==-1 ||
+      "希望している",
 
-      line.indexOf("したい")!==-1 ||
+      "したい",
 
-      line.indexOf("行きたい")!==-1 ||
+      "行きたい",
 
-      line.indexOf("やりたい")!==-1
+      "やりたい"
 
-    ){
+    ])){
 
       wishes.push(line);
 
@@ -872,81 +702,51 @@ $("summarize").onclick=function(){
 
     }
 
-    /* =========================
+    /* =====================
 
-       ⑥ 外出・地域生活
+       ④ 課題・リスク
 
-    ========================= */
+       外出が含まれていても
 
-    if(
+       こちらを優先
 
-      line.indexOf("外出")!==-1 ||
+    ===================== */
 
-      line.indexOf("買い物")!==-1 ||
+    if(has(line,[
 
-      line.indexOf("スーパー")!==-1 ||
+      "課題",
 
-      line.indexOf("通院")!==-1 ||
+      "ふらつ",
 
-      line.indexOf("地域")!==-1 ||
+      "転倒",
 
-      line.indexOf("散歩")!==-1 ||
+      "転倒リスク",
 
-      line.indexOf("デイサービス")!==-1 ||
+      "リスク",
 
-      line.indexOf("週")!==-1 ||
+      "不安",
 
-      line.indexOf("月")!==-1 ||
+      "困って",
 
-      line.indexOf("毎日")!==-1 ||
+      "困る",
 
-      line.indexOf("毎週")!==-1
+      "低下",
 
-    ){
+      "難しい",
 
-      outing.push(line);
+      "危険",
 
-      continue;
+      "注意が必要",
 
-    }
+      "問題",
 
-    /* =========================
+      "疲れやす",
 
-       ④ 生活上の課題・リスク
+      "見守りが必要",
 
-    ========================= */
+      "介助が必要"
 
-    if(
-
-      line.indexOf("課題")!==-1 ||
-
-      line.indexOf("ふらつ")!==-1 ||
-
-      line.indexOf("転倒")!==-1 ||
-
-      line.indexOf("リスク")!==-1 ||
-
-      line.indexOf("不安")!==-1 ||
-
-      line.indexOf("困って")!==-1 ||
-
-      line.indexOf("困る")!==-1 ||
-
-      line.indexOf("低下")!==-1 ||
-
-      line.indexOf("難しい")!==-1 ||
-
-      line.indexOf("危険")!==-1 ||
-
-      line.indexOf("注意が必要")!==-1 ||
-
-      line.indexOf("問題")!==-1 ||
-
-      line.indexOf("見守りが必要")!==-1 ||
-
-      line.indexOf("介助が必要")!==-1
-
-    ){
+    ])){
 
       risks.push(line);
 
@@ -954,39 +754,45 @@ $("summarize").onclick=function(){
 
     }
 
-    /* =========================
+    /* =====================
 
        ⑤ 目標・今後の方針
 
-    ========================= */
+       外出が含まれていても
 
-    if(
+       こちらを優先
 
-      line.indexOf("今後は")!==-1 ||
+    ===================== */
 
-      line.indexOf("今後")!==-1 ||
+    if(has(line,[
 
-      line.indexOf("方針")!==-1 ||
+      "今後は",
 
-      line.indexOf("目標とする")!==-1 ||
+      "今後",
 
-      line.indexOf("目標")!==-1 ||
+      "方針",
 
-      line.indexOf("継続する")!==-1 ||
+      "目標とする",
 
-      line.indexOf("継続")!==-1 ||
+      "目標に",
 
-      line.indexOf("訓練を")!==-1 ||
+      "目標",
 
-      line.indexOf("支援を")!==-1 ||
+      "継続する",
 
-      line.indexOf("取り組む")!==-1 ||
+      "継続",
 
-      line.indexOf("検討する")!==-1 ||
+      "訓練を",
 
-      line.indexOf("予定")!==-1
+      "支援を",
 
-    ){
+      "取り組む",
+
+      "検討する",
+
+      "予定"
+
+    ])){
 
       plans.push(line);
 
@@ -994,13 +800,45 @@ $("summarize").onclick=function(){
 
     }
 
-    /* =========================
+    /* =====================
+
+       ⑥ 外出・地域生活
+
+       具体的な外出内容
+
+    ===================== */
+
+    if(has(line,[
+
+      "外出",
+
+      "買い物",
+
+      "スーパー",
+
+      "通院",
+
+      "地域生活",
+
+      "地域活動",
+
+      "散歩",
+
+      "デイサービス"
+
+    ])){
+
+      outing.push(line);
+
+      continue;
+
+    }
+
+    /* =====================
 
        ① 現在の生活・身体状況
 
-       その他はこちら
-
-    ========================= */
+    ===================== */
 
     current.push(line);
 
@@ -1112,9 +950,7 @@ $("summarize").onclick=function(){
 
   /* =========================
 
-     外出の詳細
-
-     頻度・手段だけの文章を除外
+     外出詳細
 
   ========================= */
 
@@ -1124,25 +960,37 @@ $("summarize").onclick=function(){
 
     const line=outing[i];
 
-    const onlyFrequency=
+    const isFrequency=
 
-      /^(外出は)?\s*(現在)?\s*(週|月)\s*\d+回程度[。、]?$/.test(line) ||
+      /週\s*\d+回程度/.test(line) ||
 
-      /^(外出は)?\s*(現在)?\s*(週|月)\s*\d+回[。、]?$/.test(line) ||
+      /週\s*\d+回/.test(line) ||
 
-      /^(外出は)?\s*(毎日|毎週)[。、]?$/.test(line);
+      /月\s*\d+回程度/.test(line) ||
 
-    const onlyTransport=
+      /月\s*\d+回/.test(line) ||
 
-      /^外出.*(家族の車|自動車|送迎|タクシー|バス|電車|徒歩|車)[。、]?$/.test(line);
+      /毎日/.test(line) ||
 
-    if(
+      /毎週/.test(line);
 
-      onlyFrequency ||
+    const isTransport=
 
-      onlyTransport
+      line.indexOf("家族の車")!==-1 ||
 
-    ){
+      line.indexOf("送迎")!==-1 ||
+
+      line.indexOf("タクシー")!==-1 ||
+
+      line.indexOf("バス")!==-1 ||
+
+      line.indexOf("電車")!==-1 ||
+
+      line.indexOf("徒歩")!==-1 ||
+
+      line.indexOf("自動車")!==-1;
+
+    if(isFrequency || isTransport){
 
       continue;
 
@@ -1154,7 +1002,7 @@ $("summarize").onclick=function(){
 
   /* =========================
 
-     重複を削除
+     重複削除
 
   ========================= */
 
@@ -1198,23 +1046,39 @@ $("summarize").onclick=function(){
 
   if(risks.length){
 
-    nextItems.push("・課題・リスクの変化を確認");
+    nextItems.push(
+
+      "・課題・リスクの変化を確認"
+
+    );
 
   }
 
   if(wishes.length){
 
-    nextItems.push("・本人・家族の希望に対する進捗を確認");
+    nextItems.push(
+
+      "・本人・家族の希望に対する進捗を確認"
+
+    );
 
   }
 
   if(professional.length){
 
-    nextItems.push("・各専門職の支援内容と経過を確認");
+    nextItems.push(
+
+      "・各専門職の支援内容と経過を確認"
+
+    );
 
   }
 
-  nextItems.push("・身体機能・ADLの変化を確認");
+  nextItems.push(
+
+    "・身体機能・ADLの変化を確認"
+
+  );
 
   /* =========================
 
@@ -1278,7 +1142,7 @@ ${unique(nextItems).join("\n")}
 
 ========================= */
 
-$("clear").onclick=function(){
+$("clear").onclick=()=>{
 
   $("text").value="";
 
@@ -1294,7 +1158,7 @@ $("clear").onclick=function(){
 
 ========================= */
 
-$("copy").onclick=async function(){
+$("copy").onclick=async()=>{
 
   const text=$("summary").textContent;
 
@@ -1318,15 +1182,13 @@ $("copy").onclick=async function(){
 
       " コピーしました";
 
-    setTimeout(function(){
+    setTimeout(()=>{
 
       $("copied").textContent="";
 
     },1800);
 
-  }
-
-  catch(e){
+  }catch(e){
 
     alert("コピーできませんでした。");
 
@@ -1335,7 +1197,7 @@ $("copy").onclick=async function(){
 };
 
 </script>
-  
+
 </body>
 
 </html>
