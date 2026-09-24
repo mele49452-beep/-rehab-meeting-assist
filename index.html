@@ -1196,23 +1196,23 @@ $("transcribeButton").addEventListener(
 
       const result =
 
-        await transcriber(
+  await transcriber(
 
-          audioData,
+    audioData,
 
-          {
+    {
 
-            language:"japanese",
+      language:"ja",
 
-            task:"transcribe",
+      task:"transcribe",
 
-            chunk_length_s:30,
+      chunk_length_s:20,
 
-            stride_length_s:5
+      stride_length_s:5
 
-          }
+    }
 
-        );
+  );
 
       let text =
 
