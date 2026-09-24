@@ -1,12 +1,14 @@
-<!doctype html>
+<!DOCTYPE html>
 
 <html lang="ja">
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport"
+
+content="width=device-width, initial-scale=1.0">
 
 <title>リハビリ会議アシスト</title>
 
@@ -20,63 +22,47 @@
 
 body{
 
-  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;
-
-  background:#f4f6f8;
-
   margin:0;
+
+  padding:20px;
+
+  background:#f5f7fa;
 
   color:#222;
 
-}
+  font-family:
 
-header{
+    -apple-system,
 
-  background:#0b6efd;
+    BlinkMacSystemFont,
 
-  color:white;
+    "Helvetica Neue",
 
-  padding:28px 18px;
+    "Yu Gothic",
 
-}
+    "Hiragino Kaku Gothic ProN",
 
-header h1{
+    Meiryo,
 
-  margin:0 0 8px;
-
-  font-size:30px;
+    sans-serif;
 
 }
 
-header p{
+.container{
 
-  margin:0;
+  max-width:900px;
 
-  font-size:17px;
-
-}
-
-main{
-
-  max-width:760px;
-
-  margin:auto;
-
-  padding:14px;
+  margin:0 auto;
 
 }
 
-.card{
+h1{
 
-  background:white;
+  text-align:center;
 
-  border-radius:16px;
+  margin:10px 0 25px;
 
-  padding:18px;
-
-  margin:12px 0;
-
-  box-shadow:0 2px 10px #0001;
+  font-size:28px;
 
 }
 
@@ -84,15 +70,41 @@ h2{
 
   margin-top:0;
 
+  font-size:21px;
+
+}
+
+h3{
+
+  margin-bottom:8px;
+
+  font-size:17px;
+
+}
+
+.card{
+
+  background:white;
+
+  border-radius:14px;
+
+  padding:20px;
+
+  margin-bottom:20px;
+
+  box-shadow:0 2px 10px rgba(0,0,0,0.08);
+
 }
 
 label{
 
   display:block;
 
-  font-weight:700;
+  font-weight:bold;
 
-  margin:12px 0 6px;
+  margin-top:12px;
+
+  margin-bottom:6px;
 
 }
 
@@ -102,15 +114,15 @@ textarea{
 
   width:100%;
 
-  padding:12px;
-
   border:1px solid #ccc;
 
-  border-radius:10px;
+  border-radius:8px;
 
-  font:inherit;
+  padding:12px;
 
-  background:white;
+  font-size:16px;
+
+  background:#fff;
 
 }
 
@@ -120,141 +132,223 @@ textarea{
 
   resize:vertical;
 
+  line-height:1.7;
+
 }
 
 button{
 
-  padding:13px 16px;
-
-  border:0;
+  border:none;
 
   border-radius:10px;
 
-  margin:4px;
+  padding:13px 18px;
 
-  font-weight:700;
+  margin:6px 4px 6px 0;
 
   font-size:16px;
 
-}
+  font-weight:bold;
 
-.primary{
-
-  background:#0b6efd;
-
-  color:white;
-
-}
-
-.secondary{
-
-  background:#e9eef7;
-
-  color:#1f2937;
+  cursor:pointer;
 
 }
 
 button:disabled{
 
-  opacity:.45;
+  opacity:0.5;
+
+  cursor:not-allowed;
+
+}
+
+.record{
+
+  background:#e53935;
+
+  color:white;
+
+}
+
+.stop{
+
+  background:#555;
+
+  color:white;
+
+}
+
+.primary{
+
+  background:#1976d2;
+
+  color:white;
+
+}
+
+.green{
+
+  background:#2e7d32;
+
+  color:white;
+
+}
+
+.orange{
+
+  background:#ef6c00;
+
+  color:white;
+
+}
+
+.gray{
+
+  background:#777;
+
+  color:white;
 
 }
 
 .status{
 
-  padding:12px;
+  margin-top:10px;
 
-  background:#eef2ff;
+  padding:10px;
 
-  border-radius:10px;
+  border-radius:8px;
 
-  margin-bottom:10px;
-
-}
-
-.hint{
-
-  font-size:13px;
-
-  color:#64748b;
-
-  line-height:1.5;
-
-}
-
-.privacy{
-
-  font-size:13px;
-
-  color:#334155;
-
-  background:#f8fafc;
-
-  border-radius:10px;
-
-  padding:12px;
-
-  line-height:1.5;
-
-}
-
-.summary{
+  background:#f0f2f5;
 
   white-space:pre-wrap;
 
-  background:#f8fafc;
+  line-height:1.6;
 
-  border-radius:10px;
+}
 
-  padding:14px;
+.result{
+
+  background:#fafafa;
+
+  border-left:5px solid #1976d2;
+
+  padding:15px;
+
+  margin-top:12px;
+
+  border-radius:8px;
+
+  white-space:pre-wrap;
 
   line-height:1.7;
 
-  min-height:120px;
+}
+
+.small{
+
+  font-size:13px;
+
+  color:#666;
+
+  line-height:1.6;
 
 }
 
-.row{
+.warning{
 
-  display:grid;
+  background:#fff3cd;
 
-  grid-template-columns:1fr 1fr;
+  border-left:5px solid #f0ad00;
 
-  gap:10px;
+  padding:12px;
 
-}
+  border-radius:8px;
 
-.progress{
+  margin-top:10px;
 
-  height:10px;
-
-  background:#e5e7eb;
-
-  border-radius:99px;
-
-  overflow:hidden;
-
-  margin:10px 0;
+  line-height:1.6;
 
 }
 
-.progress>div{
+.success{
 
-  height:100%;
+  background:#e8f5e9;
 
-  width:0;
+  border-left:5px solid #2e7d32;
 
-  background:#0b6efd;
+  padding:12px;
 
-  transition:width .2s;
+  border-radius:8px;
+
+  margin-top:10px;
+
+  line-height:1.6;
+
+}
+
+#error{
+
+  color:#b00020;
+
+}
+
+audio{
+
+  width:100%;
+
+  margin-top:12px;
+
+}
+
+.section-title{
+
+  font-weight:bold;
+
+  font-size:18px;
+
+  margin-top:24px;
+
+  padding-bottom:6px;
+
+  border-bottom:2px solid #ddd;
+
+}
+
+hr{
+
+  border:0;
+
+  border-top:1px solid #ddd;
+
+  margin:25px 0;
 
 }
 
 @media(max-width:600px){
 
-  .row{
+  body{
 
-    grid-template-columns:1fr;
+    padding:12px;
+
+  }
+
+  .card{
+
+    padding:15px;
+
+  }
+
+  h1{
+
+    font-size:24px;
+
+  }
+
+  button{
+
+    width:100%;
+
+    margin-right:0;
 
   }
 
@@ -266,37 +360,57 @@ button:disabled{
 
 <body>
 
-<header>
+<div class="container">
 
-<h1>リハビリ会議アシスト</h1>
+<h1>🩺 リハビリ会議アシスト</h1>
 
-<p>🎙️ 録音・文字起こし・会議整理テスト版</p>
+<!-- ============================= -->
 
-</header>
+<!-- 録音 -->
 
-<main>
+<!-- ============================= -->
 
-<section class="card">
+<div class="card">
 
-<h2>🎙️ マイク録音</h2>
+<h2>🎙️ 会議録音</h2>
 
-<div id="status" class="status">
+<p class="small">
 
-準備OK
+会議内容を録音して、あとから文字起こしできます。
+
+</p>
+
+<button
+
+  id="startRecord"
+
+  class="record">
+
+🎙️ 録音開始
+
+</button>
+
+<button
+
+  id="stopRecord"
+
+  class="stop"
+
+  disabled>
+
+⏹️ 録音停止
+
+</button>
+
+<div
+
+  id="recordStatus"
+
+  class="status">
+
+録音待機中
 
 </div>
-
-<button id="start" class="primary">
-
-録音開始
-
-</button>
-
-<button id="stop" disabled>
-
-録音停止
-
-</button>
 
 <audio
 
@@ -304,149 +418,317 @@ button:disabled{
 
   controls
 
-  hidden
-
-  style="width:100%;margin-top:12px">
+  style="display:none;">
 
 </audio>
 
-<p class="hint">
+</div>
 
-SafariでHTTPSのページとして開き、録音開始時にマイクの使用を「許可」してください。
+<!-- ============================= -->
 
-</p>
+<!-- 文字起こし -->
 
-<p class="privacy">
+<!-- ============================= -->
 
-🔒 録音データを外部サーバーへアップロードする処理は入れていません。
-
-文字起こしもブラウザ内で実行する方式です。
-
-</p>
-
-</section>
-
-<section class="card">
+<div class="card">
 
 <h2>🗣️ 文字起こし</h2>
 
-<div id="transcribeStatus" class="status">
+<p class="small">
 
-録音後に「録音を文字起こしする」を押してください。
+録音した音声をブラウザ上で文字起こしします。
 
-</div>
-
-<button id="transcribe" class="primary" disabled>
-
-録音を文字起こしする
-
-</button>
-
-<div class="progress">
-
-<div id="progressBar"></div>
-
-</div>
-
-<p class="hint">
-
-初回は文字起こし用モデルをブラウザにダウンロードするため時間がかかります。
-
-音声そのものを外部サーバーへ送って認識する方式ではありません。
+初回は文字起こしモデルの読み込みに時間がかかる場合があります。
 
 </p>
 
-</section>
+<div class="warning">
 
-<section class="card">
+<strong>テストについて</strong><br>
 
-<h2>👤 会議情報</h2>
+まずは個人情報を含まないダミー音声でテストしてください。
 
-<div class="row">
+このページのコードでは、録音した音声を外部サーバーへアップロードする処理は入れていません。
 
-<div>
-
-<label for="name">利用者</label>
-
-<input id="name" placeholder="例：Aさん">
+ただし、文字起こしモデルを動かすためのプログラムやモデルデータはインターネットから読み込みます。
 
 </div>
 
-<div>
+<button
 
-<label for="date">会議日</label>
+  id="transcribeButton"
 
-<input id="date" type="date">
+  class="primary">
+
+🎤 録音を文字起こしする
+
+</button>
+
+<div
+
+  id="transcribeStatus"
+
+  class="status">
+
+文字起こし待機中
 
 </div>
 
-</div>
+<label for="meetingText">
 
-<label for="staff">参加者</label>
+📝 文字起こし結果
 
-<input
-
-  id="staff"
-
-  placeholder="例：PT、OT、看護師、介護職、ケアマネ">
-
-</section>
-
-  <section class="card">
-
-<h2>📝 会議内容・文字起こし結果</h2>
+</label>
 
 <textarea
 
-  id="text"
+  id="meetingText"
 
-  placeholder="文字起こし結果、または会議内容をここに入力します">
+  placeholder="文字起こしした内容がここに入ります。&#10;&#10;必要に応じて手動で修正することもできます。">
 
 </textarea>
 
-<p class="hint">
+</div>
 
-文字起こし後はここに自動入力されます。
+<!-- ============================= -->
 
-必要なら職員さんが修正できます。
+<!-- 会議情報 -->
 
-</p>
+<!-- ============================= -->
 
-<button id="summarize" class="primary">
+<div class="card">
 
-会議内容を整理する
+<h2>👤 会議情報</h2>
 
-</button>
+<label for="userName">
 
-<button id="clear" class="secondary">
+利用者
 
-クリア
+</label>
 
-</button>
+<input
 
-</section>
+  id="userName"
 
-<section class="card">
+  type="text"
 
-<h2>📋 リハビリ会議録（案）</h2>
+  placeholder="例：山田太郎">
 
-<div id="summary" class="summary">
+<label for="meetingDate">
 
-ここに整理結果が表示されます。
+会議日
+
+</label>
+
+<input
+
+  id="meetingDate"
+
+  type="date">
+
+<label for="participants">
+
+参加者
+
+</label>
+
+<input
+
+  id="participants"
+
+  type="text"
+
+  placeholder="例：本人、家族、PT、OT、看護師">
 
 </div>
 
-<button id="copy" class="secondary">
+<!-- ============================= -->
 
-結果をコピー
+<!-- 会議内容整理 -->
+
+<!-- ============================= -->
+
+<div class="card">
+
+<h2>📋 会議内容を整理</h2>
+
+<p class="small">
+
+文字起こし結果をもとに、リハビリ会議記録として整理します。
+
+</p>
+
+<button
+
+  id="organizeButton"
+
+  class="green">
+
+📋 会議内容を整理する
 
 </button>
 
-<span id="copied" class="hint"></span>
+<button
 
-</section>
+  id="copyButton"
 
-</main>
+  class="primary">
+
+📄 結果をコピー
+
+</button>
+
+<button
+
+  id="clearButton"
+
+  class="gray">
+
+🗑️ クリア
+
+</button>
+
+<div
+
+  id="organizeStatus"
+
+  class="status">
+
+整理待機中
+
+</div>
+
+<!-- ============================= -->
+
+<!-- 結果 -->
+
+<!-- ============================= -->
+
+<div id="results">
+
+<div class="section-title">
+
+① 現在の生活・身体状況
+
+</div>
+
+<div
+
+  id="result1"
+
+  class="result">
+
+要確認
+
+</div>
+
+<div class="section-title">
+
+② 本人・家族の希望
+
+</div>
+
+<div
+
+  id="result2"
+
+  class="result">
+
+要確認
+
+</div>
+
+<div class="section-title">
+
+③ 専門職からの意見
+
+</div>
+
+<div
+
+  id="result3"
+
+  class="result">
+
+要確認
+
+</div>
+
+<div class="section-title">
+
+④ 生活上の課題・リスク
+
+</div>
+
+<div
+
+  id="result4"
+
+  class="result">
+
+要確認
+
+</div>
+
+<div class="section-title">
+
+⑤ 目標・今後の方針
+
+</div>
+
+<div
+
+  id="result5"
+
+  class="result">
+
+要確認
+
+</div>
+
+<div class="section-title">
+
+⑥ 外出・地域生活
+
+</div>
+
+<div
+
+  id="result6"
+
+  class="result">
+
+要確認
+
+</div>
+
+<div class="section-title">
+
+⑦ 次回までの確認事項
+
+</div>
+
+<div
+
+  id="result7"
+
+  class="result">
+
+要確認
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ====================================== -->
+
+<!-- Transformers.js -->
+
+<!-- ====================================== -->
 
 <script type="module">
 
@@ -454,801 +736,1245 @@ import {
 
   pipeline
 
-} from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.2.0";
+} from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1";
 
-let recorder=null;
+/* ======================================
 
-let stream=null;
+   共通
 
-let chunks=[];
+====================================== */
 
-let recordedUrl=null;
+const $ = (id) => document.getElementById(id);
 
-let recordedBlob=null;
+/* ======================================
 
-let transcriber=null;
+   録音関係
 
-const $=id=>document.getElementById(id);
+====================================== */
 
-function getSupportedMimeType(){
+let mediaRecorder = null;
 
-  const types=[
+let audioChunks = [];
 
-    "audio/mp4",
+let audioBlob = null;
 
-    "audio/mp4;codecs=mp4a.40.2",
+let audioStream = null;
 
-    "audio/webm;codecs=opus",
+/* ======================================
 
-    "audio/webm"
+   文字起こし関係
 
-  ];
+====================================== */
 
-  return types.find(
+let transcriber = null;
 
-    type =>
+/* ======================================
 
-      typeof MediaRecorder.isTypeSupported==="function" &&
+   録音開始
 
-      MediaRecorder.isTypeSupported(type)
+====================================== */
 
-  )||"";
+$("startRecord").addEventListener(
 
-}
+  "click",
 
-$("start").onclick=async()=>{
-
-  try{
-
-    if(!navigator.mediaDevices?.getUserMedia){
-
-      throw new Error(
-
-        "HTTPSで公開されたページではありません"
-
-      );
-
-    }
-
-    if(!window.MediaRecorder){
-
-      throw new Error(
-
-        "このブラウザは録音機能に対応していません"
-
-      );
-
-    }
-
-    stream=await navigator.mediaDevices.getUserMedia({
-
-      audio:true
-
-    });
-
-    chunks=[];
-
-    recordedBlob=null;
-
-    const mimeType=getSupportedMimeType();
-
-    recorder=mimeType
-
-      ?new MediaRecorder(stream,{mimeType})
-
-      :new MediaRecorder(stream);
-
-    recorder.ondataavailable=e=>{
-
-      if(e.data&&e.data.size){
-
-        chunks.push(e.data);
-
-      }
-
-    };
-
-    recorder.onerror=()=>{
-
-      $("status").textContent=
-
-        "録音中にエラーが発生しました。";
-
-    };
-
-    recorder.onstop=()=>{
-
-      const type=
-
-        recorder.mimeType||
-
-        mimeType||
-
-        "audio/mp4";
-
-      recordedBlob=new Blob(
-
-        chunks,
-
-        {type}
-
-      );
-
-      if(recordedUrl){
-
-        URL.revokeObjectURL(recordedUrl);
-
-      }
-
-      recordedUrl=
-
-        URL.createObjectURL(recordedBlob);
-
-      const audio=$("audio");
-
-      audio.pause();
-
-      audio.src=recordedUrl;
-
-      audio.hidden=false;
-
-      audio.load();
-
-      stream?.getTracks().forEach(
-
-        t=>t.stop()
-
-      );
-
-      stream=null;
-
-      $("status").textContent=
-
-        "録音完了。下の再生ボタンで音声を確認できます。";
-
-      $("transcribe").disabled=false;
-
-      $("transcribeStatus").textContent=
-
-        "録音できました。「録音を文字起こしする」を押してください。";
-
-      $("progressBar").style.width="0%";
-
-    };
-
-    recorder.start();
-
-    $("start").disabled=true;
-
-    $("stop").disabled=false;
-
-    $("status").textContent=
-
-      "🔴 録音中です…";
-
-  }catch(e){
-
-    stream?.getTracks().forEach(
-
-      t=>t.stop()
-
-    );
-
-    stream=null;
-
-    $("status").textContent=
-
-      "マイクを開始できませんでした："+e.message;
-
-    alert(
-
-      "SafariでHTTPSのページを開き、マイクの使用を許可してください。"
-
-    );
-
-  }
-
-};
-
-$("stop").onclick=()=>{
-
-  if(recorder?.state==="recording"){
-
-    $("status").textContent=
-
-      "録音を停止しています…";
-
-    recorder.stop();
-
-    $("start").disabled=false;
-
-    $("stop").disabled=true;
-
-  }
-
-};
-
-async function blobTo16kMono(blob){
-
-  const arrayBuffer=
-
-    await blob.arrayBuffer();
-
-  const AudioCtx=
-
-    window.AudioContext||
-
-    window.webkitAudioContext;
-
-  if(!AudioCtx){
-
-    throw new Error(
-
-      "このブラウザでは音声変換に対応していません"
-
-    );
-
-  }
-
-  const ctx=new AudioCtx();
-
-  try{
-
-    const decoded=
-
-      await ctx.decodeAudioData(arrayBuffer);
-
-    const offline=
-
-      new OfflineAudioContext(
-
-        1,
-
-        Math.ceil(decoded.duration*16000),
-
-        16000
-
-      );
-
-    const source=
-
-      offline.createBufferSource();
-
-    const mono=
-
-      offline.createBuffer(
-
-        1,
-
-        decoded.length,
-
-        decoded.sampleRate
-
-      );
-
-    const out=
-
-      mono.getChannelData(0);
-
-    for(
-
-      let ch=0;
-
-      ch<decoded.numberOfChannels;
-
-      ch++
-
-    ){
-
-      const data=
-
-        decoded.getChannelData(ch);
-
-      for(
-
-        let i=0;
-
-        i<data.length;
-
-        i++
-
-      ){
-
-        out[i]+=
-
-          data[i]/
-
-          decoded.numberOfChannels;
-
-      }
-
-    }
-
-    source.buffer=mono;
-
-    source.connect(
-
-      offline.destination
-
-    );
-
-    source.start(0);
-
-    const rendered=
-
-      await offline.startRendering();
-
-    return rendered.getChannelData(0);
-
-  }finally{
+  async () => {
 
     try{
 
-      await ctx.close();
+      audioStream =
 
-    }catch(e){}
+        await navigator.mediaDevices.getUserMedia({
+
+          audio:true
+
+        });
+
+      audioChunks = [];
+
+      let mimeType = "";
+
+      const mimeTypes = [
+
+        "audio/mp4",
+
+        "audio/mp4;codecs=mp4a.40.2",
+
+        "audio/webm;codecs=opus",
+
+        "audio/webm"
+
+      ];
+
+      for(
+
+        const type of mimeTypes
+
+      ){
+
+        if(
+
+          MediaRecorder.isTypeSupported(type)
+
+        ){
+
+          mimeType = type;
+
+          break;
+
+        }
+
+      }
+
+      if(mimeType){
+
+        mediaRecorder =
+
+          new MediaRecorder(
+
+            audioStream,
+
+            {
+
+              mimeType:mimeType
+
+            }
+
+          );
+
+      }else{
+
+        mediaRecorder =
+
+          new MediaRecorder(
+
+            audioStream
+
+          );
+
+      }
+
+      mediaRecorder.ondataavailable =
+
+        (event) => {
+
+          if(event.data.size > 0){
+
+            audioChunks.push(
+
+              event.data
+
+            );
+
+          }
+
+        };
+
+      mediaRecorder.onstop =
+
+        () => {
+
+          const actualType =
+
+            mediaRecorder.mimeType ||
+
+            mimeType ||
+
+            "audio/mp4";
+
+          audioBlob =
+
+            new Blob(
+
+              audioChunks,
+
+              {
+
+                type:actualType
+
+              }
+
+            );
+
+          const audioURL =
+
+            URL.createObjectURL(
+
+              audioBlob
+
+            );
+
+          $("audio").src =
+
+            audioURL;
+
+          $("audio").style.display =
+
+            "block";
+
+          $("audio").load();
+
+          $("recordStatus").textContent =
+
+            "録音完了しました。▶️で再生できます。";
+
+          $("transcribeStatus").textContent =
+
+            "録音が準備できました。文字起こしできます。";
+
+        };
+
+      mediaRecorder.start();
+
+      $("startRecord").disabled =
+
+        true;
+
+      $("stopRecord").disabled =
+
+        false;
+
+      $("recordStatus").textContent =
+
+        "🔴 録音中です…";
+
+    }catch(error){
+
+      console.error(error);
+
+      $("recordStatus").textContent =
+
+        "録音を開始できませんでした。\n" +
+
+        error.message;
+
+    }
 
   }
 
+);
+
+/* ======================================
+
+   録音停止
+
+====================================== */
+
+$("stopRecord").addEventListener(
+
+  "click",
+
+  () => {
+
+    if(
+
+      mediaRecorder &&
+
+      mediaRecorder.state !== "inactive"
+
+    ){
+
+      mediaRecorder.stop();
+
+    }
+
+    if(audioStream){
+
+      audioStream
+
+        .getTracks()
+
+        .forEach(
+
+          track => track.stop()
+
+        );
+
+    }
+
+    $("startRecord").disabled =
+
+      false;
+
+    $("stopRecord").disabled =
+
+      true;
+
+  }
+
+);
+
+/* ======================================
+
+   Audio → 16kHz mono
+
+====================================== */
+
+async function audioBlobToFloat32Array(blob){
+
+  const arrayBuffer =
+
+    await blob.arrayBuffer();
+
+  const AudioContextClass =
+
+    window.AudioContext ||
+
+    window.webkitAudioContext;
+
+  const audioContext =
+
+    new AudioContextClass();
+
+  const decoded =
+
+    await audioContext.decodeAudioData(
+
+      arrayBuffer
+
+    );
+
+  const offlineContext =
+
+    new OfflineAudioContext(
+
+      1,
+
+      Math.ceil(
+
+        decoded.duration * 16000
+
+      ),
+
+      16000
+
+    );
+
+  const source =
+
+    offlineContext.createBufferSource();
+
+  source.buffer =
+
+    decoded;
+
+  source.connect(
+
+    offlineContext.destination
+
+  );
+
+  source.start(0);
+
+  const rendered =
+
+    await offlineContext.startRendering();
+
+  const channel =
+
+    rendered.getChannelData(0);
+
+  const result =
+
+    new Float32Array(channel.length);
+
+  result.set(channel);
+
+  await audioContext.close();
+
+  return result;
+
 }
+
+/* ======================================
+
+   Whisperモデル取得
+
+====================================== */
 
 async function getTranscriber(){
 
-  if(transcriber)
+  if(transcriber){
 
     return transcriber;
 
-  $("transcribeStatus").textContent=
+  }
 
-    "文字起こしモデルを読み込んでいます…初回は時間がかかります。";
+  $("transcribeStatus").textContent =
 
-  transcriber=await pipeline(
+    "🧠 文字起こしモデルを読み込んでいます…\n" +
 
-    "automatic-speech-recognition",
+    "初回は時間がかかる場合があります。";
 
-    "onnx-community/whisper-tiny",
+  /*
 
-    {dtype:"q8"}
+   * ここが今回の重要な変更点です。
 
-  );
+   *
+
+   * 以前：
+
+   * {dtype:"q8"}
+
+   *
+
+   * 今回：
+
+   * dtypeを指定しない
+
+   *
+
+   * iPhone Safariで発生していた
+
+   * TransposeDQWeightsForMatMulNBits
+
+   * エラーを避けます。
+
+   */
+
+  transcriber =
+
+    await pipeline(
+
+      "automatic-speech-recognition",
+
+      "onnx-community/whisper-tiny"
+
+    );
 
   return transcriber;
 
 }
 
-$("transcribe").onclick=async()=>{
+/* ======================================
 
-  if(!recordedBlob){
+   文字起こし
 
-    alert("先に録音してください。");
+====================================== */
 
-    return;
+$("transcribeButton").addEventListener(
 
-  }
+  "click",
 
-  $("transcribe").disabled=true;
+  async () => {
 
-  $("transcribeStatus").textContent=
+    if(!audioBlob){
 
-    "音声を準備しています…";
+      $("transcribeStatus").textContent =
 
-  $("progressBar").style.width="10%";
+        "⚠️ 先に録音してください。";
 
-  try{
-
-    const audioData=
-
-      await blobTo16kMono(recordedBlob);
-
-    $("progressBar").style.width="25%";
-
-    const asr=
-
-      await getTranscriber();
-
-    $("transcribeStatus").textContent=
-
-      "文字起こし中です…しばらく待ってください。";
-
-    const result=
-
-      await asr(
-
-        audioData,
-
-        {
-
-          language:"japanese",
-
-          task:"transcribe",
-
-          chunk_length_s:30,
-
-          stride_length_s:5
-
-        }
-
-      );
-
-    const text=
-
-      (result?.text||"").trim();
-
-    if(!text){
-
-      throw new Error(
-
-        "文字起こし結果が空でした"
-
-      );
+      return;
 
     }
 
-    $("text").value=text;
+    try{
 
-    $("progressBar").style.width="100%";
+      $("transcribeButton").disabled =
 
-    $("transcribeStatus").textContent=
+        true;
 
-      "✅ 文字起こし完了。下の会議内容に入りました。内容を確認・修正してから整理できます。";
+      $("transcribeStatus").textContent =
 
-  }catch(e){
+        "🔄 音声を準備しています…";
 
-    console.error(e);
+      const audioData =
 
-    $("progressBar").style.width="0%";
+        await audioBlobToFloat32Array(
 
-    $("transcribeStatus").textContent=
+          audioBlob
 
-      "文字起こしに失敗しました："+(e?.message||e);
+        );
 
-    alert(
+      $("transcribeStatus").textContent =
 
-      "文字起こしに失敗しました。まずは短いダミー音声で試してください。"
+        "🧠 文字起こし中です…";
 
-    );
+      const transcriber =
 
-  }finally{
+        await getTranscriber();
 
-    $("transcribe").disabled=false;
+      const result =
+
+        await transcriber(
+
+          audioData,
+
+          {
+
+            language:"japanese",
+
+            task:"transcribe",
+
+            chunk_length_s:30,
+
+            stride_length_s:5
+
+          }
+
+        );
+
+      let text =
+
+        "";
+
+      if(result){
+
+        if(
+
+          typeof result.text === "string"
+
+        ){
+
+          text =
+
+            result.text.trim();
+
+        }else if(
+
+          Array.isArray(result.chunks)
+
+        ){
+
+          text =
+
+            result.chunks
+
+              .map(
+
+                chunk => chunk.text || ""
+
+              )
+
+              .join("")
+
+              .trim();
+
+        }
+
+      }
+
+      if(!text){
+
+        text =
+
+          "文字起こし結果が取得できませんでした。";
+
+      }
+
+      $("meetingText").value =
+
+        text;
+
+      $("transcribeStatus").textContent =
+
+        "✅ 文字起こしが完了しました。";
+
+    }catch(error){
+
+      console.error(
+
+        "Transcription error:",
+
+        error
+
+      );
+
+      $("transcribeStatus").textContent =
+
+        "❌ 文字起こしでエラーが発生しました。\n\n" +
+
+        error.message +
+
+        "\n\n" +
+
+        "もう一度試してみてください。";
+
+    }finally{
+
+      $("transcribeButton").disabled =
+
+        false;
+
+    }
 
   }
 
-};
+);
 
-function findLines(text,words){
+/* ======================================
 
-  return text
+   キーワード整理用関数
 
-    .split(/\n+/)
+====================================== */
 
-    .map(x=>x.trim())
+function findSentences(
 
-    .filter(Boolean)
+  text,
 
-    .filter(
+  keywords
 
-      line=>words.some(w=>line.includes(w))
+){
 
-    )
+  const sentences =
 
-    .slice(0,5)
+    text
 
-    .join("\n");
+      .replace(/。/g,"。\n")
+
+      .split(/\n+/)
+
+      .map(
+
+        s => s.trim()
+
+      )
+
+      .filter(
+
+        s => s.length > 0
+
+      );
+
+  const found =
+
+    sentences.filter(
+
+      sentence =>
+
+        keywords.some(
+
+          keyword =>
+
+            sentence.includes(keyword)
+
+        )
+
+    );
+
+  return found;
 
 }
 
-$("summarize").onclick=()=>{
+/* ======================================
 
-  const text=
+   重複削除
 
-    $("text").value.trim();
+====================================== */
 
-  if(!text){
+function uniqueLines(lines){
 
-    alert(
+  return [
 
-      "先に会議内容を入力してください。"
+    ...new Set(
 
-    );
+      lines
 
-    return;
+    )
+
+  ];
+
+}
+
+/* ======================================
+
+   会議内容整理
+
+====================================== */
+
+$("organizeButton").addEventListener(
+
+  "click",
+
+  () => {
+
+    const text =
+
+      $("meetingText")
+
+        .value
+
+        .trim();
+
+    if(!text){
+
+      $("organizeStatus").textContent =
+
+        "⚠️ 会議内容を入力してください。";
+
+      return;
+
+    }
+
+    $("organizeStatus").textContent =
+
+      "🔄 会議内容を整理しています…";
+
+    /* -------------------------------
+
+       ① 現在の生活・身体状況
+
+    -------------------------------- */
+
+    let result1 =
+
+      findSentences(
+
+        text,
+
+        [
+
+          "生活",
+
+          "身体",
+
+          "歩行",
+
+          "歩け",
+
+          "立ち上が",
+
+          "ふらつ",
+
+          "食事",
+
+          "トイレ",
+
+          "入浴",
+
+          "自立",
+
+          "見守り",
+
+          "介助",
+
+          "疲れ"
+
+        ]
+
+      );
+
+    /* -------------------------------
+
+       ② 本人・家族の希望
+
+    -------------------------------- */
+
+    let result2 =
+
+      findSentences(
+
+        text,
+
+        [
+
+          "本人",
+
+          "希望",
+
+          "家族",
+
+          "したい",
+
+          "行きたい",
+
+          "再開",
+
+          "望む"
+
+        ]
+
+      );
+
+    /* -------------------------------
+
+       ③ 専門職からの意見
+
+    -------------------------------- */
+
+    let result3 =
+
+      findSentences(
+
+        text,
+
+        [
+
+          "PT",
+
+          "OT",
+
+          "ST",
+
+          "理学療法士",
+
+          "作業療法士",
+
+          "言語聴覚士",
+
+          "看護師",
+
+          "ケアマネ",
+
+          "介護職",
+
+          "専門職",
+
+          "訓練",
+
+          "練習"
+
+        ]
+
+      );
+
+    /* -------------------------------
+
+       ④ 生活上の課題・リスク
+
+    -------------------------------- */
+
+    let result4 =
+
+      findSentences(
+
+        text,
+
+        [
+
+          "課題",
+
+          "リスク",
+
+          "転倒",
+
+          "ふらつ",
+
+          "危険",
+
+          "注意",
+
+          "不安",
+
+          "疲れ",
+
+          "難しい",
+
+          "困難"
+
+        ]
+
+      );
+
+    /* -------------------------------
+
+       ⑤ 目標・今後の方針
+
+    -------------------------------- */
+
+    let result5 =
+
+      findSentences(
+
+        text,
+
+        [
+
+          "目標",
+
+          "今後",
+
+          "方針",
+
+          "継続",
+
+          "改善",
+
+          "安全",
+
+          "できる",
+
+          "再開",
+
+          "取り組"
+
+        ]
+
+      );
+
+    /* -------------------------------
+
+       ⑥ 外出・地域生活
+
+    -------------------------------- */
+
+    let result6 =
+
+      findSentences(
+
+        text,
+
+        [
+
+          "外出",
+
+          "買い物",
+
+          "スーパー",
+
+          "地域",
+
+          "車",
+
+          "家族の車",
+
+          "週",
+
+          "回程度",
+
+          "公共交通",
+
+          "バス",
+
+          "電車"
+
+        ]
+
+      );
+
+    /* -------------------------------
+
+       ⑦ 次回までの確認事項
+
+    -------------------------------- */
+
+    let result7 =
+
+      findSentences(
+
+        text,
+
+        [
+
+          "次回",
+
+          "確認",
+
+          "確認事項",
+
+          "次回まで",
+
+          "変化",
+
+          "状態を確認",
+
+          "安全面"
+
+        ]
+
+      );
+
+    result1 =
+
+      uniqueLines(result1);
+
+    result2 =
+
+      uniqueLines(result2);
+
+    result3 =
+
+      uniqueLines(result3);
+
+    result4 =
+
+      uniqueLines(result4);
+
+    result5 =
+
+      uniqueLines(result5);
+
+    result6 =
+
+      uniqueLines(result6);
+
+    result7 =
+
+      uniqueLines(result7);
+
+    $("result1").textContent =
+
+      result1.length
+
+        ? result1.join("\n")
+
+        : "要確認";
+
+    $("result2").textContent =
+
+      result2.length
+
+        ? result2.join("\n")
+
+        : "要確認";
+
+    $("result3").textContent =
+
+      result3.length
+
+        ? result3.join("\n")
+
+        : "要確認";
+
+    $("result4").textContent =
+
+      result4.length
+
+        ? result4.join("\n")
+
+        : "要確認";
+
+    $("result5").textContent =
+
+      result5.length
+
+        ? result5.join("\n")
+
+        : "要確認";
+
+    $("result6").textContent =
+
+      result6.length
+
+        ? result6.join("\n")
+
+        : "要確認";
+
+    $("result7").textContent =
+
+      result7.length
+
+        ? result7.join("\n")
+
+        : "要確認";
+
+    $("organizeStatus").textContent =
+
+      "✅ 会議内容を整理しました。";
+
+    $("results").scrollIntoView({
+
+      behavior:"smooth",
+
+      block:"start"
+
+    });
 
   }
 
-  const current=
+);
 
-    findLines(
+/* ======================================
 
-      text,
+   コピー
 
-      [
+====================================== */
 
-        "歩行",
+$("copyButton").addEventListener(
 
-        "歩け",
+  "click",
 
-        "立ち上が",
+  async () => {
 
-        "食事",
+    const userName =
 
-        "入浴",
+      $("userName").value.trim();
 
-        "着替",
+    const meetingDate =
 
-        "トイレ",
+      $("meetingDate").value;
 
-        "認知",
+    const participants =
 
-        "血圧",
+      $("participants").value.trim();
 
-        "状態",
+    const output =
 
-        "ADL"
+`リハビリ会議記録
 
-      ]
+【利用者】
 
-    );
+${userName || "未入力"}
 
-  const wish=
+【会議日】
 
-    findLines(
+${meetingDate || "未入力"}
 
-      text,
+【参加者】
 
-      [
+${participants || "未入力"}
 
-        "希望",
+① 現在の生活・身体状況
 
-        "したい",
+${$("result1").textContent}
 
-        "行きたい",
+② 本人・家族の希望
 
-        "目標",
+${$("result2").textContent}
 
-        "本人",
+③ 専門職からの意見
 
-        "家族"
+${$("result3").textContent}
 
-      ]
+④ 生活上の課題・リスク
 
-    );
+${$("result4").textContent}
 
-  const pros=
+⑤ 目標・今後の方針
 
-    findLines(
+${$("result5").textContent}
 
-      text,
+⑥ 外出・地域生活
 
-      [
+${$("result6").textContent}
 
-        "PT",
+⑦ 次回までの確認事項
 
-        "OT",
+${$("result7").textContent}
 
-        "ST",
+`;
 
-        "看護",
+    try{
 
-        "介護",
+      await navigator.clipboard.writeText(
 
-        "ケアマネ",
+        output
 
-        "リハビリ"
+      );
 
-      ]
+      $("organizeStatus").textContent =
 
-    );
+        "✅ 結果をコピーしました。";
 
-  const issues=
+    }catch(error){
 
-    findLines(
+      $("organizeStatus").textContent =
 
-      text,
+        "⚠️ コピーできませんでした。";
 
-      [
+      console.error(error);
 
-        "課題",
-
-        "不安",
-
-        "ふらつ",
-
-        "困",
-
-        "低下",
-
-        "リスク",
-
-        "問題",
-
-        "難しい",
-
-        "転倒"
-
-      ]
-
-    );
-
-  const plan=
-
-    findLines(
-
-      text,
-
-      [
-
-        "方針",
-
-        "継続",
-
-        "訓練",
-
-        "支援",
-
-        "今後",
-
-        "次回",
-
-        "目標",
-
-        "安全"
-
-      ]
-
-    );
-
-  const freq=
-
-    findLines(
-
-      text,
-
-      [
-
-        "週",
-
-        "月",
-
-        "毎日",
-
-        "外出"
-
-      ]
-
-    );
-
-  const transport=
-
-    findLines(
-
-      text,
-
-      [
-
-        "車",
-
-        "自動車",
-
-        "バス",
-
-        "タクシー",
-
-        "徒歩",
-
-        "送迎",
-
-        "家族"
-
-      ]
-
-    );
-
-  $("summary").textContent=
-
-`【リハビリテーション会議録（案）】
-
-利用者：${$("name").value||"—"}
-
-会議日：${$("date").value||"—"}
-
-参加者：${$("staff").value||"—"}
-
-【1. 現在の生活・身体状況】
-
-${current||"要確認"}
-
-【2. 本人・家族の希望】
-
-${wish||"要確認"}
-
-【3. 専門職からの意見】
-
-${pros||"要確認"}
-
-【4. 生活上の課題・リスク】
-
-${issues||"要確認"}
-
-【5. 目標・今後の方針】
-
-${plan||"要確認"}
-
-【6. 外出・地域生活】
-
-外出頻度：${freq||"要確認"}
-
-外出手段：${transport||"要確認"}
-
-【7. 次回までの確認事項】
-
-・課題・リスクの変化を確認
-
-・本人・家族の希望に対する進捗を確認
-
-・各専門職の支援内容と経過を確認
-
-・身体機能・ADLの変化を確認
-
-※これは会議内容を自動分類して作成した「案」です。正式記録にする前に原文と照合・確認してください。`;
-
-};
-
-$("clear").onclick=()=>{
-
-  $("text").value="";
-
-  $("summary").textContent=
-
-    "ここに整理結果が表示されます。";
-
-};
-
-$("copy").onclick=async()=>{
-
-  const text=
-
-    $("summary").textContent;
-
-  if(
-
-    !text||
-
-    text==="ここに整理結果が表示されます。"
-
-  ){
-
-    return;
+    }
 
   }
 
-  try{
+);
 
-    await navigator.clipboard.writeText(text);
+/* ======================================
 
-    $("copied").textContent=
+   クリア
 
-      " コピーしました";
+====================================== */
 
-    setTimeout(
+$("clearButton").addEventListener(
 
-      ()=>$("copied").textContent="",
+  "click",
 
-      1800
+  () => {
+
+    $("userName").value =
+
+      "";
+
+    $("meetingDate").value =
+
+      "";
+
+    $("participants").value =
+
+      "";
+
+    $("meetingText").value =
+
+      "";
+
+    $("result1").textContent =
+
+      "要確認";
+
+    $("result2").textContent =
+
+      "要確認";
+
+    $("result3").textContent =
+
+      "要確認";
+
+    $("result4").textContent =
+
+      "要確認";
+
+    $("result5").textContent =
+
+      "要確認";
+
+    $("result6").textContent =
+
+      "要確認";
+
+    $("result7").textContent =
+
+      "要確認";
+
+    $("organizeStatus").textContent =
+
+      "整理待機中";
+
+    $("transcribeStatus").textContent =
+
+      "文字起こし待機中";
+
+    $("recordStatus").textContent =
+
+      "録音待機中";
+
+    $("audio").pause();
+
+    $("audio").removeAttribute(
+
+      "src"
 
     );
 
-  }catch(e){
+    $("audio").style.display =
 
-    alert(
+      "none";
 
-      "コピーできませんでした。"
+    audioBlob =
 
-    );
+      null;
+
+    audioChunks =
+
+      [];
 
   }
 
-};
+);
+
+/* ======================================
+
+   初期設定
+
+====================================== */
+
+$("meetingDate").value =
+
+  new Date()
+
+    .toISOString()
+
+    .split("T")[0];
 
 </script>
 
