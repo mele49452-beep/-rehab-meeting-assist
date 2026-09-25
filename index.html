@@ -1310,7 +1310,9 @@ stride_length_s:5
 
 // ==============================
 
-// 会議内容 整理ロジック強化版
+// 会議内容 整理ロジック ver.2
+
+// 文章を基本1つのカテゴリーに分類
 
 // ==============================
 
@@ -1338,44 +1340,6 @@ function uniqueLines(lines){
 
 }
 
-function scoreSentence(sentence, keywords){
-
-  let score = 0;
-
-  keywords.forEach(keyword => {
-
-    if(sentence.includes(keyword)){
-
-      score += keyword.length >= 3 ? 2 : 1;
-
-    }
-
-  });
-
-  return score;
-
-}
-
-function selectSentences(sentences, keywords, minScore = 1){
-
-  return sentences
-
-    .map(sentence => ({
-
-      sentence,
-
-      score: scoreSentence(sentence, keywords)
-
-    }))
-
-    .filter(item => item.score >= minScore)
-
-    .sort((a,b) => b.score - a.score)
-
-    .map(item => item.sentence);
-
-}
-
 function formatResult(lines){
 
   const unique = uniqueLines(lines);
@@ -1392,127 +1356,231 @@ function formatResult(lines){
 
 // ==============================
 
-// カテゴリー別キーワード
+// 文章をカテゴリー分類
 
 // ==============================
 
-const keywords1 = [
+function classifySentence(sentence){
 
-  "生活","身体","体調",
+  // ⑦ 次回までの確認事項
 
-  "歩行","歩ける","歩けない","歩き",
+  if(
 
-  "立ち上が","立位","座位",
+    sentence.includes("次回") ||
 
-  "ふらつ","筋力","下肢",
+    sentence.includes("次回まで") ||
 
-  "痛み","疼痛",
+    sentence.includes("確認する") ||
 
-  "食事","トイレ","排泄",
+    sentence.includes("確認を") ||
 
-  "入浴","着替え",
+    sentence.includes("観察する") ||
 
-  "自立","見守り","介助",
+    sentence.includes("再評価")
 
-  "疲れ","疲労","睡眠"
+  ){
 
-];
+    return 7;
 
-const keywords2 = [
+  }
 
-  "本人","家族",
+  // ③ 専門職からの意見
 
-  "希望","望む","したい","行きたい",
+  if(
 
-  "続けたい","再開したい",
+    sentence.includes("PTから") ||
 
-  "できるようになりたい",
+    sentence.includes("OTから") ||
 
-  "してほしい"
+    sentence.includes("STから") ||
 
-];
+    sentence.includes("理学療法士から") ||
 
-const keywords3 = [
+    sentence.includes("作業療法士から") ||
 
-  "PT","OT","ST",
+    sentence.includes("言語聴覚士から") ||
 
-  "理学療法士","作業療法士","言語聴覚士",
+    sentence.includes("看護師から") ||
 
-  "看護師","ケアマネ","介護職",
+    sentence.includes("ケアマネから") ||
 
-  "専門職",
+    sentence.includes("介護職から")
 
-  "意見","提案","助言",
+  ){
 
-  "訓練","練習","リハビリ",
+    return 3;
 
-  "必要","継続する"
+  }
 
-];
+  // ② 本人・家族の希望
 
-const keywords4 = [
+  if(
 
-  "課題","リスク","危険",
+    (
 
-  "転倒","転倒リスク",
+      sentence.includes("本人") ||
 
-  "ふらつ","注意","注意が必要",
+      sentence.includes("家族")
 
-  "不安","難しい","困難",
+    ) &&
 
-  "疲れやすい","疲労",
+    (
 
-  "事故","安全面"
+      sentence.includes("希望") ||
 
-];
+      sentence.includes("したい") ||
 
-const keywords5 = [
+      sentence.includes("行きたい") ||
 
-  "目標","今後","方針",
+      sentence.includes("望む") ||
 
-  "継続","改善",
+      sentence.includes("してほしい") ||
 
-  "できるよう","できること",
+      sentence.includes("再開してほしい")
 
-  "再開","取り組",
+    )
 
-  "目指す","目指して",
+  ){
 
-  "安全に"
+    return 2;
 
-];
+  }
 
-const keywords6 = [
+  // ⑥ 外出・地域生活
 
-  "外出","買い物","スーパー",
+  if(
 
-  "散歩","地域","地域生活",
+    sentence.includes("外出頻度") ||
 
-  "車","家族の車",
+    sentence.includes("外出時") ||
 
-  "バス","電車","公共交通",
+    sentence.includes("買い物") ||
 
-  "週","回程度",
+    sentence.includes("スーパー") ||
 
-  "外に出る","出かける"
+    sentence.includes("地域で") ||
 
-];
+    sentence.includes("地域生活") ||
 
-const keywords7 = [
+    sentence.includes("家族の車") ||
 
-  "次回","次回まで",
+    sentence.includes("公共交通") ||
 
-  "確認","確認事項",
+    sentence.includes("バス") ||
 
-  "観察","再評価",
+    sentence.includes("電車") ||
 
-  "変化","状態を確認",
+    sentence.includes("週1回") ||
 
-  "経過","確認する",
+    sentence.includes("週2回") ||
 
-  "安全面を確認"
+    sentence.includes("週3回") ||
 
-];
+    sentence.includes("回程度")
+
+  ){
+
+    return 6;
+
+  }
+
+  // ④ 生活上の課題・リスク
+
+  if(
+
+    sentence.includes("課題") ||
+
+    sentence.includes("リスク") ||
+
+    sentence.includes("転倒") ||
+
+    sentence.includes("危険") ||
+
+    sentence.includes("注意が必要") ||
+
+    sentence.includes("安全面に配慮") ||
+
+    sentence.includes("不安") ||
+
+    sentence.includes("困難")
+
+  ){
+
+    return 4;
+
+  }
+
+  // ⑤ 目標・今後の方針
+
+  if(
+
+    sentence.includes("目標") ||
+
+    sentence.includes("今後は") ||
+
+    sentence.includes("今後も") ||
+
+    sentence.includes("方針") ||
+
+    sentence.includes("継続する") ||
+
+    sentence.includes("取り組む") ||
+
+    sentence.includes("目指す") ||
+
+    sentence.includes("できるよう")
+
+  ){
+
+    return 5;
+
+  }
+
+  // ① 現在の生活・身体状況
+
+  if(
+
+    sentence.includes("現在") ||
+
+    sentence.includes("自立") ||
+
+    sentence.includes("見守り") ||
+
+    sentence.includes("介助") ||
+
+    sentence.includes("歩行") ||
+
+    sentence.includes("歩き") ||
+
+    sentence.includes("立ち上が") ||
+
+    sentence.includes("ふらつ") ||
+
+    sentence.includes("筋力") ||
+
+    sentence.includes("食事") ||
+
+    sentence.includes("トイレ") ||
+
+    sentence.includes("入浴") ||
+
+    sentence.includes("疲れ") ||
+
+    sentence.includes("疲労") ||
+
+    sentence.includes("痛み")
+
+  ){
+
+    return 1;
+
+  }
+
+  // どこにも明確に分類できないもの
+
+  return 0;
+
+}
 
 // ==============================
 
@@ -1540,127 +1608,57 @@ $("organizeButton").addEventListener("click", () => {
 
   const sentences = splitSentences(text);
 
-  // 各カテゴリーを抽出
+  const results = {
 
-  let result1 = selectSentences(sentences, keywords1, 1);
+    1: [],
 
-  let result2 = selectSentences(sentences, keywords2, 1);
+    2: [],
 
-  let result3 = selectSentences(sentences, keywords3, 1);
+    3: [],
 
-  let result4 = selectSentences(sentences, keywords4, 1);
+    4: [],
 
-  let result5 = selectSentences(sentences, keywords5, 1);
+    5: [],
 
-  let result6 = selectSentences(sentences, keywords6, 1);
+    6: [],
 
-  let result7 = selectSentences(sentences, keywords7, 1);
+    7: []
 
-  // ==============================
+  };
 
-  // 優先ルール
+  // 1つの文章を基本1カテゴリーだけに分類
 
-  // ==============================
+  sentences.forEach(sentence => {
 
-  // 「本人・家族＋希望系」は②に優先
+    const category = classifySentence(sentence);
 
-  result2 = sentences.filter(sentence => {
+    if(category >= 1 && category <= 7){
 
-    const hasPerson =
+      results[category].push(sentence);
 
-      sentence.includes("本人") ||
-
-      sentence.includes("家族");
-
-    const hasWish =
-
-      sentence.includes("希望") ||
-
-      sentence.includes("したい") ||
-
-      sentence.includes("行きたい") ||
-
-      sentence.includes("望む") ||
-
-      sentence.includes("再開したい");
-
-    return hasPerson && hasWish;
+    }
 
   });
 
-  // 専門職の発言は③を優先
+  // ==============================
 
-  result3 = sentences.filter(sentence => {
-
-    const hasProfessional =
-
-      ["PT","OT","ST","理学療法士","作業療法士",
-
-       "言語聴覚士","看護師","ケアマネ","介護職"]
-
-      .some(word => sentence.includes(word));
-
-    const hasOpinion =
-
-      ["意見","提案","必要","訓練","練習",
-
-       "リハビリ","継続"].some(word =>
-
-         sentence.includes(word)
-
-       );
-
-    return hasProfessional && hasOpinion;
-
-  });
-
-  // 「次回」「確認」は⑦に優先
-
-  result7 = sentences.filter(sentence =>
-
-    ["次回","次回まで","確認","観察","再評価"]
-
-      .some(word => sentence.includes(word))
-
-  );
+  // 結果表示
 
   // ==============================
 
-  // 外出関連は⑥に優先
+  $("result1").textContent = formatResult(results[1]);
 
-  // ==============================
+  $("result2").textContent = formatResult(results[2]);
 
-  result6 = sentences.filter(sentence =>
+  $("result3").textContent = formatResult(results[3]);
 
-    ["外出","買い物","スーパー","散歩",
+  $("result4").textContent = formatResult(results[4]);
 
-     "地域生活","家族の車","公共交通",
+  $("result5").textContent = formatResult(results[5]);
 
-     "バス","電車","出かける"]
+  $("result6").textContent = formatResult(results[6]);
 
-      .some(word => sentence.includes(word))
-
-  );
-
-  // ==============================
-
-  // 表示
-
-  // ==============================
-
-  $("result1").textContent = formatResult(result1);
-
-  $("result2").textContent = formatResult(result2);
-
-  $("result3").textContent = formatResult(result3);
-
-  $("result4").textContent = formatResult(result4);
-
-  $("result5").textContent = formatResult(result5);
-
-  $("result6").textContent = formatResult(result6);
-
-  $("result7").textContent = formatResult(result7);
+  $("result7").textContent = formatResult(results[7]);
 
   $("organizeStatus").textContent =
 
