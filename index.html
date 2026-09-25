@@ -1362,13 +1362,19 @@ function formatResult(lines){
 
 function classifySentence(sentence){
 
+  // ==============================
+
   // ⑦ 次回までの確認事項
+
+  // ==============================
 
   if(
 
     sentence.includes("次回") ||
 
     sentence.includes("次回まで") ||
+
+    sentence.includes("次回に") ||
 
     sentence.includes("確認する") ||
 
@@ -1384,7 +1390,11 @@ function classifySentence(sentence){
 
   }
 
+  // ==============================
+
   // ③ 専門職からの意見
+
+  // ==============================
 
   if(
 
@@ -1412,7 +1422,11 @@ function classifySentence(sentence){
 
   }
 
+  // ==============================
+
   // ② 本人・家族の希望
+
+  // ==============================
 
   if(
 
@@ -1432,6 +1446,8 @@ function classifySentence(sentence){
 
       sentence.includes("行きたい") ||
 
+      sentence.includes("話している") ||
+
       sentence.includes("望む") ||
 
       sentence.includes("してほしい") ||
@@ -1446,13 +1462,87 @@ function classifySentence(sentence){
 
   }
 
+  // ==============================
+
+  // ④ 生活上の課題・リスク
+
+  // ※ 外出より先に判定するのがポイント
+
+  // ==============================
+
+  if(
+
+    sentence.includes("課題") ||
+
+    sentence.includes("リスク") ||
+
+    sentence.includes("転倒") ||
+
+    sentence.includes("危険") ||
+
+    sentence.includes("注意が必要") ||
+
+    sentence.includes("安全面に配慮") ||
+
+    sentence.includes("安全面") ||
+
+    sentence.includes("不安") ||
+
+    sentence.includes("困難") ||
+
+    sentence.includes("血圧の変動")
+
+  ){
+
+    return 4;
+
+  }
+
+  // ==============================
+
+  // ⑤ 目標・今後の方針
+
+  // ==============================
+
+  if(
+
+    sentence.includes("目標") ||
+
+    sentence.includes("今後は") ||
+
+    sentence.includes("今後も") ||
+
+    sentence.includes("方針") ||
+
+    sentence.includes("継続する") ||
+
+    sentence.includes("継続して") ||
+
+    sentence.includes("取り組む") ||
+
+    sentence.includes("目指す") ||
+
+    sentence.includes("できるよう") ||
+
+    sentence.includes("増やしていく") ||
+
+    sentence.includes("確認していく")
+
+  ){
+
+    return 5;
+
+  }
+
+  // ==============================
+
   // ⑥ 外出・地域生活
+
+  // ==============================
 
   if(
 
     sentence.includes("外出頻度") ||
-
-    sentence.includes("外出時") ||
 
     sentence.includes("買い物") ||
 
@@ -1484,59 +1574,11 @@ function classifySentence(sentence){
 
   }
 
-  // ④ 生活上の課題・リスク
-
-  if(
-
-    sentence.includes("課題") ||
-
-    sentence.includes("リスク") ||
-
-    sentence.includes("転倒") ||
-
-    sentence.includes("危険") ||
-
-    sentence.includes("注意が必要") ||
-
-    sentence.includes("安全面に配慮") ||
-
-    sentence.includes("不安") ||
-
-    sentence.includes("困難")
-
-  ){
-
-    return 4;
-
-  }
-
-  // ⑤ 目標・今後の方針
-
-  if(
-
-    sentence.includes("目標") ||
-
-    sentence.includes("今後は") ||
-
-    sentence.includes("今後も") ||
-
-    sentence.includes("方針") ||
-
-    sentence.includes("継続する") ||
-
-    sentence.includes("取り組む") ||
-
-    sentence.includes("目指す") ||
-
-    sentence.includes("できるよう")
-
-  ){
-
-    return 5;
-
-  }
+  // ==============================
 
   // ① 現在の生活・身体状況
+
+  // ==============================
 
   if(
 
@@ -1576,7 +1618,11 @@ function classifySentence(sentence){
 
   }
 
-  // どこにも明確に分類できないもの
+  // ==============================
+
+  // 分類できない文章
+
+  // ==============================
 
   return 0;
 
