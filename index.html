@@ -1308,471 +1308,373 @@ stride_length_s:5
 
 ====================================== */
 
-function findSentences(
+// ==============================
 
-  text,
+// 会議内容 整理ロジック強化版
 
-  keywords
+// ==============================
 
-){
+function splitSentences(text){
 
-  const sentences =
+  return text
 
-    text
+    .replace(/\r\n/g, "\n")
 
-      .replace(/。/g,"。\n")
+    .replace(/[！!？?]/g, "。")
 
-      .split(/\n+/)
+    .replace(/。+/g, "。\n")
 
-      .map(
+    .split(/\n+/)
 
-        s => s.trim()
+    .map(s => s.trim())
 
-      )
-
-      .filter(
-
-        s => s.length > 0
-
-      );
-
-  const found =
-
-    sentences.filter(
-
-      sentence =>
-
-        keywords.some(
-
-          keyword =>
-
-            sentence.includes(keyword)
-
-        )
-
-    );
-
-  return found;
+    .filter(s => s.length >= 3);
 
 }
-
-/* ======================================
-
-   重複削除
-
-====================================== */
 
 function uniqueLines(lines){
 
-  return [
-
-    ...new Set(
-
-      lines
-
-    )
-
-  ];
+  return [...new Set(lines)];
 
 }
 
-/* ======================================
+function scoreSentence(sentence, keywords){
 
-   会議内容整理
+  let score = 0;
 
-====================================== */
+  keywords.forEach(keyword => {
 
-$("organizeButton").addEventListener(
+    if(sentence.includes(keyword)){
 
-  "click",
-
-  () => {
-
-    const text =
-
-      $("meetingText")
-
-        .value
-
-        .trim();
-
-    if(!text){
-
-      $("organizeStatus").textContent =
-
-        "⚠️ 会議内容を入力してください。";
-
-      return;
+      score += keyword.length >= 3 ? 2 : 1;
 
     }
 
-    $("organizeStatus").textContent =
+  });
 
-      "🔄 会議内容を整理しています…";
+  return score;
 
-    /* -------------------------------
+}
 
-       ① 現在の生活・身体状況
+function selectSentences(sentences, keywords, minScore = 1){
 
-    -------------------------------- */
+  return sentences
 
-    let result1 =
+    .map(sentence => ({
 
-      findSentences(
+      sentence,
 
-        text,
+      score: scoreSentence(sentence, keywords)
 
-        [
+    }))
 
-          "生活",
+    .filter(item => item.score >= minScore)
 
-          "身体",
+    .sort((a,b) => b.score - a.score)
 
-          "歩行",
+    .map(item => item.sentence);
 
-          "歩け",
+}
 
-          "立ち上が",
+function formatResult(lines){
 
-          "ふらつ",
+  const unique = uniqueLines(lines);
 
-          "食事",
+  if(unique.length === 0){
 
-          "トイレ",
-
-          "入浴",
-
-          "自立",
-
-          "見守り",
-
-          "介助",
-
-          "疲れ"
-
-        ]
-
-      );
-
-    /* -------------------------------
-
-       ② 本人・家族の希望
-
-    -------------------------------- */
-
-    let result2 =
-
-      findSentences(
-
-        text,
-
-        [
-
-          "本人",
-
-          "希望",
-
-          "家族",
-
-          "したい",
-
-          "行きたい",
-
-          "再開",
-
-          "望む"
-
-        ]
-
-      );
-
-    /* -------------------------------
-
-       ③ 専門職からの意見
-
-    -------------------------------- */
-
-    let result3 =
-
-      findSentences(
-
-        text,
-
-        [
-
-          "PT",
-
-          "OT",
-
-          "ST",
-
-          "理学療法士",
-
-          "作業療法士",
-
-          "言語聴覚士",
-
-          "看護師",
-
-          "ケアマネ",
-
-          "介護職",
-
-          "専門職",
-
-          "訓練",
-
-          "練習"
-
-        ]
-
-      );
-
-    /* -------------------------------
-
-       ④ 生活上の課題・リスク
-
-    -------------------------------- */
-
-    let result4 =
-
-      findSentences(
-
-        text,
-
-        [
-
-          "課題",
-
-          "リスク",
-
-          "転倒",
-
-          "ふらつ",
-
-          "危険",
-
-          "注意",
-
-          "不安",
-
-          "疲れ",
-
-          "難しい",
-
-          "困難"
-
-        ]
-
-      );
-
-    /* -------------------------------
-
-       ⑤ 目標・今後の方針
-
-    -------------------------------- */
-
-    let result5 =
-
-      findSentences(
-
-        text,
-
-        [
-
-          "目標",
-
-          "今後",
-
-          "方針",
-
-          "継続",
-
-          "改善",
-
-          "安全",
-
-          "できる",
-
-          "再開",
-
-          "取り組"
-
-        ]
-
-      );
-
-    /* -------------------------------
-
-       ⑥ 外出・地域生活
-
-    -------------------------------- */
-
-    let result6 =
-
-      findSentences(
-
-        text,
-
-        [
-
-          "外出",
-
-          "買い物",
-
-          "スーパー",
-
-          "地域",
-
-          "車",
-
-          "家族の車",
-
-          "週",
-
-          "回程度",
-
-          "公共交通",
-
-          "バス",
-
-          "電車"
-
-        ]
-
-      );
-
-    /* -------------------------------
-
-       ⑦ 次回までの確認事項
-
-    -------------------------------- */
-
-    let result7 =
-
-      findSentences(
-
-        text,
-
-        [
-
-          "次回",
-
-          "確認",
-
-          "確認事項",
-
-          "次回まで",
-
-          "変化",
-
-          "状態を確認",
-
-          "安全面"
-
-        ]
-
-      );
-
-    result1 =
-
-      uniqueLines(result1);
-
-    result2 =
-
-      uniqueLines(result2);
-
-    result3 =
-
-      uniqueLines(result3);
-
-    result4 =
-
-      uniqueLines(result4);
-
-    result5 =
-
-      uniqueLines(result5);
-
-    result6 =
-
-      uniqueLines(result6);
-
-    result7 =
-
-      uniqueLines(result7);
-
-    $("result1").textContent =
-
-      result1.length
-
-        ? result1.join("\n")
-
-        : "要確認";
-
-    $("result2").textContent =
-
-      result2.length
-
-        ? result2.join("\n")
-
-        : "要確認";
-
-    $("result3").textContent =
-
-      result3.length
-
-        ? result3.join("\n")
-
-        : "要確認";
-
-    $("result4").textContent =
-
-      result4.length
-
-        ? result4.join("\n")
-
-        : "要確認";
-
-    $("result5").textContent =
-
-      result5.length
-
-        ? result5.join("\n")
-
-        : "要確認";
-
-    $("result6").textContent =
-
-      result6.length
-
-        ? result6.join("\n")
-
-        : "要確認";
-
-    $("result7").textContent =
-
-      result7.length
-
-        ? result7.join("\n")
-
-        : "要確認";
-
-    $("organizeStatus").textContent =
-
-      "✅ 会議内容を整理しました。";
-
-    $("results").scrollIntoView({
-
-      behavior:"smooth",
-
-      block:"start"
-
-    });
+    return "要確認";
 
   }
 
-);
+  return unique.map(line => "・" + line).join("\n");
+
+}
+
+// ==============================
+
+// カテゴリー別キーワード
+
+// ==============================
+
+const keywords1 = [
+
+  "生活","身体","体調",
+
+  "歩行","歩ける","歩けない","歩き",
+
+  "立ち上が","立位","座位",
+
+  "ふらつ","筋力","下肢",
+
+  "痛み","疼痛",
+
+  "食事","トイレ","排泄",
+
+  "入浴","着替え",
+
+  "自立","見守り","介助",
+
+  "疲れ","疲労","睡眠"
+
+];
+
+const keywords2 = [
+
+  "本人","家族",
+
+  "希望","望む","したい","行きたい",
+
+  "続けたい","再開したい",
+
+  "できるようになりたい",
+
+  "してほしい"
+
+];
+
+const keywords3 = [
+
+  "PT","OT","ST",
+
+  "理学療法士","作業療法士","言語聴覚士",
+
+  "看護師","ケアマネ","介護職",
+
+  "専門職",
+
+  "意見","提案","助言",
+
+  "訓練","練習","リハビリ",
+
+  "必要","継続する"
+
+];
+
+const keywords4 = [
+
+  "課題","リスク","危険",
+
+  "転倒","転倒リスク",
+
+  "ふらつ","注意","注意が必要",
+
+  "不安","難しい","困難",
+
+  "疲れやすい","疲労",
+
+  "事故","安全面"
+
+];
+
+const keywords5 = [
+
+  "目標","今後","方針",
+
+  "継続","改善",
+
+  "できるよう","できること",
+
+  "再開","取り組",
+
+  "目指す","目指して",
+
+  "安全に"
+
+];
+
+const keywords6 = [
+
+  "外出","買い物","スーパー",
+
+  "散歩","地域","地域生活",
+
+  "車","家族の車",
+
+  "バス","電車","公共交通",
+
+  "週","回程度",
+
+  "外に出る","出かける"
+
+];
+
+const keywords7 = [
+
+  "次回","次回まで",
+
+  "確認","確認事項",
+
+  "観察","再評価",
+
+  "変化","状態を確認",
+
+  "経過","確認する",
+
+  "安全面を確認"
+
+];
+
+// ==============================
+
+// 整理ボタン
+
+// ==============================
+
+$("organizeButton").addEventListener("click", () => {
+
+  const text = $("meetingText").value.trim();
+
+  if(!text){
+
+    $("organizeStatus").textContent =
+
+      "⚠️ 会議内容を入力してください。";
+
+    return;
+
+  }
+
+  $("organizeStatus").textContent =
+
+    "🔄 会議内容を整理しています…";
+
+  const sentences = splitSentences(text);
+
+  // 各カテゴリーを抽出
+
+  let result1 = selectSentences(sentences, keywords1, 1);
+
+  let result2 = selectSentences(sentences, keywords2, 1);
+
+  let result3 = selectSentences(sentences, keywords3, 1);
+
+  let result4 = selectSentences(sentences, keywords4, 1);
+
+  let result5 = selectSentences(sentences, keywords5, 1);
+
+  let result6 = selectSentences(sentences, keywords6, 1);
+
+  let result7 = selectSentences(sentences, keywords7, 1);
+
+  // ==============================
+
+  // 優先ルール
+
+  // ==============================
+
+  // 「本人・家族＋希望系」は②に優先
+
+  result2 = sentences.filter(sentence => {
+
+    const hasPerson =
+
+      sentence.includes("本人") ||
+
+      sentence.includes("家族");
+
+    const hasWish =
+
+      sentence.includes("希望") ||
+
+      sentence.includes("したい") ||
+
+      sentence.includes("行きたい") ||
+
+      sentence.includes("望む") ||
+
+      sentence.includes("再開したい");
+
+    return hasPerson && hasWish;
+
+  });
+
+  // 専門職の発言は③を優先
+
+  result3 = sentences.filter(sentence => {
+
+    const hasProfessional =
+
+      ["PT","OT","ST","理学療法士","作業療法士",
+
+       "言語聴覚士","看護師","ケアマネ","介護職"]
+
+      .some(word => sentence.includes(word));
+
+    const hasOpinion =
+
+      ["意見","提案","必要","訓練","練習",
+
+       "リハビリ","継続"].some(word =>
+
+         sentence.includes(word)
+
+       );
+
+    return hasProfessional && hasOpinion;
+
+  });
+
+  // 「次回」「確認」は⑦に優先
+
+  result7 = sentences.filter(sentence =>
+
+    ["次回","次回まで","確認","観察","再評価"]
+
+      .some(word => sentence.includes(word))
+
+  );
+
+  // ==============================
+
+  // 外出関連は⑥に優先
+
+  // ==============================
+
+  result6 = sentences.filter(sentence =>
+
+    ["外出","買い物","スーパー","散歩",
+
+     "地域生活","家族の車","公共交通",
+
+     "バス","電車","出かける"]
+
+      .some(word => sentence.includes(word))
+
+  );
+
+  // ==============================
+
+  // 表示
+
+  // ==============================
+
+  $("result1").textContent = formatResult(result1);
+
+  $("result2").textContent = formatResult(result2);
+
+  $("result3").textContent = formatResult(result3);
+
+  $("result4").textContent = formatResult(result4);
+
+  $("result5").textContent = formatResult(result5);
+
+  $("result6").textContent = formatResult(result6);
+
+  $("result7").textContent = formatResult(result7);
+
+  $("organizeStatus").textContent =
+
+    "✅ 会議内容を整理しました。";
+
+  $("results").scrollIntoView({
+
+    behavior:"smooth",
+
+    block:"start"
+
+  });
+
+});
 
 /* ======================================
 
